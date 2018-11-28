@@ -1,0 +1,371 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"h",
+				"h1_b"
+			],
+			[
+				"ran",
+				"rand_int"
+			],
+			[
+				"pu",
+				"pubKeys"
+			],
+			[
+				"pri",
+				"primeGroup"
+			],
+			[
+				"pub",
+				"pubKey0"
+			],
+			[
+				"bor",
+				"border-color\tproperty"
+			],
+			[
+				"fon",
+				"font-size\tproperty"
+			],
+			[
+				"co",
+				"color\tproperty"
+			],
+			[
+				"border",
+				"border-color\tproperty"
+			],
+			[
+				"ba",
+				"background-color\tproperty"
+			],
+			[
+				"mar",
+				"margin-top\tproperty"
+			],
+			[
+				"font",
+				"font-family\tproperty"
+			],
+			[
+				"P",
+				"ProjectProps"
+			],
+			[
+				"Pro",
+				"Projects"
+			],
+			[
+				"class",
+				"className"
+			],
+			[
+				"Hea",
+				"HeaderProps"
+			],
+			[
+				"Hae",
+				"HeaderProps"
+			],
+			[
+				"fun",
+				"function"
+			],
+			[
+				"Head",
+				"headerProps"
+			],
+			[
+				"Pages",
+				"PagesEnum"
+			],
+			[
+				"Pag",
+				"PagesTitle"
+			],
+			[
+				"menu",
+				"menuShown"
+			],
+			[
+				"page",
+				"pageShown"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "README.md",
+			"settings":
+			{
+				"buffer_size": 83,
+				"line_ending": "Unix"
+			}
+		}
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"Package Control: ",
+				"Package Control: Enable Package"
+			]
+		],
+		"width": 0.0
+	},
+	"console":
+	{
+		"height": 0.0,
+		"history":
+		[
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+		"/home/belen/Documents/GIT/FYP-VehicleSensorFusion"
+	],
+	"file_history":
+	[
+		"/home/belen/Documents/GIT/EE4-PostBotPat/ros_setup/setup.sh",
+		"/home/belen/Documents/GIT/EE4-PostBotPat/ros_setup/setup2.sh",
+		"/home/belen/Documents/GIT/EE4-PostBotPat/mm_movement/scripts/pick_place.py",
+		"/home/belen/Documents/GIT/EE4-PostBotPat/mm_movement/scripts/deliver_box.py",
+		"/home/belen/Documents/GIT/EE4-PostBotPat/.gitignore",
+		"/home/belen/Documents/GIT/EE4-PostBotPat/README.md",
+		"/home/belen/Documents/GIT/GarbledCircuits/crypto.py",
+		"/home/belen/Documents/GIT/GarbledCircuits/yao.py",
+		"/home/belen/Documents/GIT/GarbledCircuits/ot.py",
+		"/home/belen/Documents/GIT/GarbledCircuits/main.py",
+		"/home/belen/Documents/GIT/GarbledCircuits/Makefile",
+		"/home/belen/Documents/GIT/GarbledCircuits/json/f.million.json",
+		"/home/belen/Documents/GIT/GarbledCircuits/outputs_million",
+		"/home/belen/Documents/GIT/GarbledCircuits/json/f.smart.json",
+		"/home/belen/Documents/GIT/GarbledCircuits/json/f.min.json",
+		"/home/belen/Documents/GIT/GarbledCircuits/json/f.nand.json",
+		"/home/belen/Documents/GIT/GarbledCircuits/output_tests",
+		"/home/belen/Documents/GIT/GarbledCircuits/outputs_given",
+		"/home/belen/Documents/GIT/GarbledCircuits/json/f.bool.json",
+		"/home/belen/Documents/GIT/GarbledCircuits/json/f.add.json",
+		"/home/belen/Documents/GIT/GarbledCircuits/util.py",
+		"/home/belen/Documents/baxter/setup.sh",
+		"/home/belen/Documents/baxter/setup.md",
+		"/home/belen/Documents/website_old/style.scss",
+		"/home/belen/Documents/website_old/index.html",
+		"/home/belen/Documents/GIT/Imperial-Esports-Hub/static/style.css",
+		"/home/belen/Documents/GIT/Imperial-Esports-Hub/templates/style.scss",
+		"/home/belen/Documents/website_old/style.css",
+		"/home/belen/Documents/ros.txt",
+		"/home/belen/Documents/GIT/portfolio/src/AboutPage/AboutPage.scss",
+		"/home/belen/Documents/GIT/portfolio/src/Footer/Footer.scss",
+		"/home/belen/Documents/GIT/portfolio/src/Footer/Footer.js",
+		"/home/belen/Documents/GIT/portfolio/src/Main/index.js",
+		"/home/belen/Documents/GIT/portfolio/src/Header/Header.scss",
+		"/home/belen/Documents/GIT/portfolio/src/Header/index.js",
+		"/home/belen/Documents/GIT/portfolio/src/Header/Header.js",
+		"/home/belen/Documents/GIT/portfolio/src/Header/Header.css",
+		"/home/belen/Documents/GIT/portfolio/src/Main/Main.css",
+		"/home/belen/Documents/GIT/portfolio/src/index.js",
+		"/home/belen/Documents/GIT/portfolio/package.json",
+		"/home/belen/Documents/GIT/portfolio/src/ProjectsPage/index.js",
+		"/home/belen/Documents/GIT/portfolio/src/actions/actions.js"
+	],
+	"find":
+	{
+		"height": 39.0
+	},
+	"find_in_files":
+	{
+		"height": 101.0,
+		"where_history":
+		[
+			"<current file>",
+			"/home/belen/Documents/GIT/GarbledCircuits"
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"Quaternion",
+			"print",
+			"#print",
+			"Avoid",
+			"send",
+			"print(",
+			"print",
+			"util.",
+			"ot",
+			"ot_alice"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+			"#print(",
+			"#print",
+			""
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"folders":
+	[
+		{
+			"path": "/home/belen/Documents/GIT/FYP-VehicleSensorFusion"
+		}
+	],
+	"groups":
+	[
+		{
+			"selected": 0,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "README.md",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 83,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								83,
+								83
+							]
+						],
+						"settings":
+						{
+							"SL.30.region_keys":
+							[
+							],
+							"syntax": "Packages/Markdown/Markdown.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 26.0
+	},
+	"input":
+	{
+		"height": 38.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.SublimeLinter":
+	{
+		"height": 0.0
+	},
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"pinned_build_system": "",
+	"project": "",
+	"replace":
+	{
+		"height": 48.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 213.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}
