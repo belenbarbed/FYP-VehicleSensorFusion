@@ -19,6 +19,9 @@ To emulate part of the functionality of autonomous vehicles. You will build a ca
 
 ### Equipment
   - Lidar: Velodyne VLP-16 + mount
+    - [Product page](https://velodynelidar.com/vlp-16-lite.html)
+    - [User manual](https://velodynelidar.com/docs/manuals/63-9243%20REV%20D%20MANUAL,USERS,VLP-16.pdf)
+    - [ROS integration instructions](http://wiki.ros.org/velodyne/Tutorials/Getting%20Started%20with%20the%20Velodyne%20VLP16)
   - 4 Google Pixel 2 XL + gopro mounts
   - Mount to vehicle
     - Prototype myself
@@ -28,7 +31,7 @@ To emulate part of the functionality of autonomous vehicles. You will build a ca
     - 4 holes for gopro mounts (laser cut/drill?)
   - OR get made externally
 
-### ROS => start with this
+### ROS
   - Install ROS
   - Make simple system:
     - Publisher 1: fetches cloudpoints from lidar, publishes them (topic: cloudpoints)

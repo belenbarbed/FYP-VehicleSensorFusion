@@ -103,7 +103,8 @@
 			"file": "README.md",
 			"settings":
 			{
-				"buffer_size": 83,
+				"buffer_size": 2070,
+				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
 		}
@@ -144,10 +145,13 @@
 	},
 	"expanded_folders":
 	[
-		"/home/belen/Documents/GIT/FYP-VehicleSensorFusion"
+		"/home/belen/Documents/GIT/FYP-VehicleSensorFusion",
+		"/home/belen/Documents/GIT/FYP-VehicleSensorFusion/ros_ws",
+		"/home/belen/Documents/GIT/FYP-VehicleSensorFusion/ros_ws/src"
 	],
 	"file_history":
 	[
+		"/home/belen/Documents/GIT/FYP-VehicleSensorFusion/ros_ws/src/CMakeLists.txt",
 		"/home/belen/Documents/GIT/EE4-PostBotPat/ros_setup/setup.sh",
 		"/home/belen/Documents/GIT/EE4-PostBotPat/ros_setup/setup2.sh",
 		"/home/belen/Documents/GIT/EE4-PostBotPat/mm_movement/scripts/pick_place.py",
@@ -254,15 +258,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 83,
+						"buffer_size": 2070,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								83,
-								83
+								1023,
+								1023
 							]
 						],
 						"settings":
@@ -273,7 +277,7 @@
 							"syntax": "Packages/Markdown/Markdown.sublime-syntax"
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 24.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
