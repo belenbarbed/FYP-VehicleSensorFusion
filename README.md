@@ -7,7 +7,9 @@ To emulate part of the functionality of autonomous vehicles. You will build a ca
 
 ## Literature
 [Intro paper](http://seclab.illinois.edu/wp-content/uploads/2018/06/demetriou2018codrive.pdf)
+
 [Callibration paper](https://pdfs.semanticscholar.org/ed15/5d1a146e0cba6be98fd7128461439f88732a.pdf)
+
 [Possible implementation](https://github.com/laboshinl/but_calibration_camera_velodyne)
 
 ## Links

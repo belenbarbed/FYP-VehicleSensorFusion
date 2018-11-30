@@ -26,13 +26,13 @@ cd ros_ws
 catkin_make
 catkin_make install
 
-# Velodyne lidar stuff
+# Velodyne lidar dependencies & pkg
 sudo apt-get install ros-melodic-velodyne
 
 cd src
 git submodule add https://github.com/ros-drivers/velodyne
 
-rosdep install --from-paths src --ignore-src --rosdistro meodic -y
+rosdep install --from-paths src --ignore-src --rosdistro melodic -y
 
 cd ../
 catkin_make
