@@ -34,9 +34,8 @@ To emulate part of the functionality of autonomous vehicles. You will build a ca
   - OR get made externally
 
 ### ROS
-  - Install ROS
-  - Make simple system:
-    - Publisher 1: fetches cloudpoints from lidar, publishes them (topic: cloudpoints)
+  - Start with simple system:
+    - Publisher 1: fetches cloudpoints from lidar, publishes them (topic: /velodyne_points)
     - Publisher 2: fetches processed frames from server, publishes them (topic: frames)
     - Subscriber: subscribes to both
       - Interpolates info from where cars are in the frame with which cloudpoints correspond to said car
@@ -47,4 +46,9 @@ To emulate part of the functionality of autonomous vehicles. You will build a ca
   - Get app on phones to stream footage to server => research existing
   - Accepts connection from 4 clients (4 smartphones)
   - For each frame per client, recognises cars
+    - Use [Mask RCNN](https://arxiv.org/pdf/1703.06870.pdf)
+      - [Possible ROS + tensorflow implementation](https://github.com/akio/mask_rcnn_ros)
   - Outputs frame with boundary boxes for each car
+
+### Visualisation
+  - NGINX w/ RTMP
