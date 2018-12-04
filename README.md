@@ -48,7 +48,8 @@ To emulate part of the functionality of autonomous vehicles. You will build a ca
   - For each frame per client, recognises cars
     - Use [Mask RCNN](https://arxiv.org/pdf/1703.06870.pdf)
       - [Possible ROS + tensorflow implementation](https://github.com/akio/mask_rcnn_ros)
-  - Outputs frame with boundary boxes for each car
+  - Outputs frame with boundary shapes for each car
+    - Message format: TBD
 
 ### Visualisation
   - NGINX w/ RTMP
