@@ -10,12 +10,38 @@ To emulate part of the functionality of autonomous vehicles. You will build a ca
 
 [Callibration paper](https://pdfs.semanticscholar.org/ed15/5d1a146e0cba6be98fd7128461439f88732a.pdf)
 
-[Possible implementation](https://github.com/laboshinl/but_calibration_camera_velodyne)
+  - [Implementation](https://github.com/laboshinl/but_calibration_camera_velodyne)
 
 ## Links
 [GitHub Repo](https://github.com/belenbarbed/FYP-VehicleSensorFusion)
 
 [Google Drive Folder](https://drive.google.com/drive/folders/1wz1pCsgVdYGVe1YnCs0_oeLTOG-cAbBa?usp=sharing)
+
+## Usage
+
+The phones are running the app [hNode](https://medium.com/husarion-blog/dont-buy-expensive-sensors-for-your-robot-use-your-smartphone-24380eab521), which establishes a network between them and the laptop. After being registered on the same network, running ```rostopic list``` shows the topics the phones are publishing with their sensor data.
+
+On the laptop, several commands should be run.
+
+On the first tab, run ```roscore```.
+
+Then, run the package that listens to the phone topics and format the image into a cv2-acceptable format with:
+```
+rosrun phone_streams phone_streams_publisher.py
+```
+
+To make the Velodyne lidar start posting cloudpoint data, run:
+```
+roslaunch velodyne_pointcloud VLP16_points.launch
+```
+
+After that, one can run
+```
+rosrun video_transport video_subscriber_sync 
+```
+to combine the phone camera frames with the lidar cloudpoints.
+
+We are currently working on the callibration of these two systems.
 
 ## Project Milestones
 
