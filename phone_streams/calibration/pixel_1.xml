@@ -1,0 +1,11 @@
+<VIZARIO.Cam>
+ 	<device type="Google Pixel 2 XL" version="28"/>
+ 	<camera type="Back" resolution="640x480"/>
+ 	<target type="checkerboard" hcorners="8" vcorners="6"/>
+ 	<aspect ratio="1.0000000000" squaresize="2.4000000954" fixprinciple="false" fixtangent="true"/>
+ 	<calibration focus="1.0" numimages="40">
+ 		<error value="0.1940712035"/>
+ 		<kmatrix k00="493.7242431641" k10="0.0000000000" k20="322.0943908691" k01="0.0000000000" k11="496.9177246094" k21="231.7220153809" k02="0.0000000000" k12="0.0000000000" k22="1.0000000000"/>
+ 		<distortion d0="0.2480924278" d1="-1.2347553968" d2="0.0000000000" d3="0.0000000000" d4="2.2600946426"/>
+ 	</calibration>
+ </VIZARIO.Cam>

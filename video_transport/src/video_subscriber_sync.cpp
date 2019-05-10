@@ -89,8 +89,11 @@ int main(int argc, char **argv)
   ros::NodeHandle nh;
 
   image_transport::ImageTransport it(nh);
-  image_transport::SubscriberFilter sub_1(it, "/pixel_1/camera0/image/not_compressed", 1);
-  image_transport::SubscriberFilter sub_2(it, "/phone_5/camera0/image/not_compressed", 1);
+  image_transport::SubscriberFilter sub_1(it, "/pixel_1/camera0/image/raw", 1);
+  // image_transport::SubscriberFilter sub_2(it, "/pixel_2/camera0/image/raw", 1);
+  // image_transport::SubscriberFilter sub_3(it, "/pixel_3/camera0/image/raw", 1);
+  // image_transport::SubscriberFilter sub_4(it, "/pixel_4/camera0/image/raw", 1);
+  image_transport::SubscriberFilter sub_2(it, "/phone_5/camera0/image/raw", 1);
   message_filters::Subscriber<sensor_msgs::PointCloud2> sub_pc(nh, "/velodyne_points", 1);
   
   typedef message_filters::sync_policies::ApproximateTime<

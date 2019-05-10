@@ -1,15 +1,17 @@
 #!/usr/bin/env python
 
 import rospy
-from sensor_msgs.msg import CompressedImage, Image
+from sensor_msgs.msg import CompressedImage, Image, CameraInfo
 import cv2
 from cv_bridge import CvBridge
 import numpy as np
 
 def pixel_1_callback(data):
     global br
-    global pub1
+    global pub1_raw
+    global pub1_info
     if(data.data != []):
+        # From compressed to raw
         rospy.loginfo("Image received from pixel_1")
         img = br.compressed_imgmsg_to_cv2(data, desired_encoding="bgr8")
         # time = str(data.header.stamp.secs) + ("00000000" if data.header.stamp.nsecs == 0 else str(data.header.stamp.nsecs))
@@ -18,10 +20,17 @@ def pixel_1_callback(data):
         msg.header.stamp.secs = data.header.stamp.secs
         msg.header.stamp.nsecs = data.header.stamp.nsecs
         msg.encoding = "bgr8"
-        pub1.publish(msg)
+        pub1_raw.publish(msg)
+
+        # Camera info
+        pixel_1_info = CameraInfo()
+        pixel_1_info.P = [493.7242431641,  0.0000000000, 322.0943908691, 0.0,
+                            0.0000000000, 96.9177246094, 231.7220153809, 0.0,
+                            0.0,           0.0,            1.0,          0.0]
+        pub1_info.publish(pixel_1_info)
     else:
         rospy.loginfo("Something went wrong")
-
+"""
 def pixel_2_callback(data):
     global br
     global pub2
@@ -69,7 +78,7 @@ def pixel_4_callback(data):
         pub1.publish(msg)
     else:
         rospy.loginfo("Something went wrong")
-
+"""
 # DEBUG: remove this test phone
 def phone_5_callback(data):
     global br
@@ -87,6 +96,9 @@ def phone_5_callback(data):
     else:
         rospy.loginfo("Something went wrong")
 
+def do_nothing(req):
+    return
+
 def main():
     rospy.loginfo("Initialising node...")
     rospy.init_node("phone_streams_publisher")
@@ -95,27 +107,29 @@ def main():
     global br
     br = CvBridge()
 
-    global pub1
-    pub1 = rospy.Publisher("/pixel_1/camera0/image/not_compressed", Image, queue_size=10)
-    global pub2
-    pub1 = rospy.Publisher("/pixel_2/camera0/image/not_compressed", Image, queue_size=10)
-    global pub3
-    pub1 = rospy.Publisher("/pixel_3/camera0/image/not_compressed", Image, queue_size=10)
-    global pub4
-    pub1 = rospy.Publisher("/pixel_4/camera0/image/not_compressed", Image, queue_size=10)
+    global pub1_raw
+    pub1_raw = rospy.Publisher("/pixel_1/camera0/image/raw", Image, queue_size=10)
+    global pub1_info
+    pub1_info = rospy.Publisher("/pixel_1/camera0/camera_info", CameraInfo, queue_size=10)
+    # global pub2
+    # pub1 = rospy.Publisher("/pixel_2/camera0/image/raw", Image, queue_size=10)
+    # global pub3
+    # pub1 = rospy.Publisher("/pixel_3/camera0/image/raw", Image, queue_size=10)
+    # global pub4
+    # pub1 = rospy.Publisher("/pixel_4/camera0/image/raw", Image, queue_size=10)
 
     # DEBUG: remove this test phone
     global pub5
-    pub5 = rospy.Publisher("/phone_5/camera0/image/not_compressed", Image, queue_size=10)
+    pub5 = rospy.Publisher("/phone_5/camera0/image/raw", Image, queue_size=10)
 
     rospy.Subscriber("/pixel_1/camera0/image/compressed", CompressedImage, pixel_1_callback)
-    rospy.Subscriber("/pixel_2/camera0/image/compressed", CompressedImage, pixel_2_callback)
-    rospy.Subscriber("/pixel_3/camera0/image/compressed", CompressedImage, pixel_3_callback)
-    rospy.Subscriber("/pixel_4/camera0/image/compressed", CompressedImage, pixel_4_callback)
+    # rospy.Subscriber("/pixel_2/camera0/image/compressed", CompressedImage, pixel_2_callback)
+    # rospy.Subscriber("/pixel_3/camera0/image/compressed", CompressedImage, pixel_3_callback)
+    # rospy.Subscriber("/pixel_4/camera0/image/compressed", CompressedImage, pixel_4_callback)
 
     # DEBUG: remove this test phone
     rospy.Subscriber("/phone_5/camera0/image/compressed", CompressedImage, phone_5_callback)
-    
+
     rospy.spin()
 
     rospy.loginfo("Finished phone_streams_publisher")
