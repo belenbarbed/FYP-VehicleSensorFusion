@@ -2,6 +2,14 @@
 
 Supervisor: Soteris Demetriou
 
+## Authors
+
+[Belen Barbed](https://github.com/belenbarbed)
+
+[Kaifeng Yan](https://github.com/Kai-2333)
+
+Flora Qin
+
 ## Goal
 To emulate part of the functionality of autonomous vehicles. You will build a car mount which can collect visual and distance information, and detect objects around the vehicle as well as their angle and distance from it. It should also be able to display in real time the captured information.
 
@@ -10,7 +18,7 @@ To emulate part of the functionality of autonomous vehicles. You will build a ca
 
 [Callibration paper](https://pdfs.semanticscholar.org/ed15/5d1a146e0cba6be98fd7128461439f88732a.pdf)
 
-  - [Implementation](https://github.com/laboshinl/but_calibration_camera_velodyne)
+  - [Implementation](https://github.com/robofit/but_velodyne/tree/master/but_calibration_camera_velodyne)
 
 ## Links
 [GitHub Repo](https://github.com/belenbarbed/FYP-VehicleSensorFusion)
@@ -19,7 +27,7 @@ To emulate part of the functionality of autonomous vehicles. You will build a ca
 
 ## Usage
 
-The phones are running the app [hNode](https://medium.com/husarion-blog/dont-buy-expensive-sensors-for-your-robot-use-your-smartphone-24380eab521), which establishes a network between them and the laptop. After being registered on the same [network](https://app.husarnet.com/network/849), running ```rostopic list``` shows the topics the phones are publishing with their sensor data.
+The phones are running the app [hNode](https://play.google.com/store/apps/details?id=com.husarion.node&hl=en_GB), which establishes a network between them and the laptop [(article)](https://medium.com/husarion-blog/dont-buy-expensive-sensors-for-your-robot-use-your-smartphone-24380eab521). After being registered on the same [network](https://app.husarnet.com/network/849), running ```rostopic list``` shows the topics the phones are publishing with their sensor data.
 
 On the laptop, several commands should be run.
 
@@ -53,6 +61,18 @@ to combine the phone camera frames with the lidar cloudpoints.
 
 We are currently working on the callibration of these two systems.
 
+## Troubleshooting
+
+If things are suddenly not working and one wants to start the build afresh, run:
+
+```
+cd <ROS workspace dir>
+rm -rf build/
+rm -rf devel/
+catkin_make install
+catkin_make
+```
+
 ## Project Sections
 
 ### Equipment
@@ -68,14 +88,15 @@ We are currently working on the callibration of these two systems.
     - 4 holes for phone mounts
 
 ### ROS
-  - hNode: ROS node running in each of the phones -> publish phone sensor data (incl cameras)
-  - [velodyne](https://github.com/ros-drivers/velodyne): driver for the VLP16, publishes the 3D cloudpoints to ```/velodyne_points```.
+  - [hNode](https://play.google.com/store/apps/details?id=com.husarion.node&hl=en_GB): ROS node running in each of the phones -> publish phone sensor data (incl cameras)
+  - [velodyne](https://github.com/ros-drivers/velodyne): driver for the VLP16, publishes the 3D cloudpoints over ethernet to ```/velodyne_points```.
   - phone_streams: listens to compressed image data from phones, uncompress it, and publish raw in new topic
-  - video_transport: listens to both the raw cameras topics and the cloudpoints topics, waits until it has data from all 5 within the same time frame, and the superimposes the cloudpoints on top of the streams.
+  - video_transport: listens to both the raw cameras topics and the cloudpoints topics, waits until it has data from all 5 within the same time frame, and then superimposes the cloudpoints on top of the streams.
   - [but_calibration_camera_velodyne](https://github.com/robofit/but_velodyne/tree/master/but_calibration_camera_velodyne): node to callibrate the coordinate systems of the Lidar and 4 cameras.
 
 ### Server (Recognition System)
   - TBD
 
 ### Visualisation
-  - NGINX w/ RTMP?
+  - Is currently in video_transport, using [cv2](https://opencv.org/).
+  - Check out NGINX w/ RTMP?
