@@ -19,13 +19,23 @@ To emulate part of the functionality of autonomous vehicles. You will build a ca
 
 ## Usage
 
-The phones are running the app [hNode](https://medium.com/husarion-blog/dont-buy-expensive-sensors-for-your-robot-use-your-smartphone-24380eab521), which establishes a network between them and the laptop. After being registered on the same network, running ```rostopic list``` shows the topics the phones are publishing with their sensor data.
+The phones are running the app [hNode](https://medium.com/husarion-blog/dont-buy-expensive-sensors-for-your-robot-use-your-smartphone-24380eab521), which establishes a network between them and the laptop. After being registered on the same [network](https://app.husarnet.com/network/849), running ```rostopic list``` shows the topics the phones are publishing with their sensor data.
 
 On the laptop, several commands should be run.
 
+Make sure the ```~/.bashrc``` or  ```~/.zshrc``` has the following lines to ensure ROS compiles and that the Husarion networks connects correctly:
+```
+source /opt/ros/melodic/setup.bash
+source <ROS workspace dir>/devel/setup.sh
+
+export ROS_IPV6=on
+export ROS_MASTER_URI=http://master:11311
+export ROS_HOSTNAME=master
+```
+
 On the first tab, run ```roscore```.
 
-Then, run the package that listens to the phone topics and format the image into a cv2-acceptable format with:
+Then, run the package that listens to the phone topics and formats the image into a cv2-acceptable format with:
 ```
 rosrun phone_streams phone_streams_publisher.py
 ```
@@ -43,39 +53,29 @@ to combine the phone camera frames with the lidar cloudpoints.
 
 We are currently working on the callibration of these two systems.
 
-## Project Milestones
+## Project Sections
 
 ### Equipment
   - Lidar: Velodyne VLP-16 + mount
     - [Product page](https://velodynelidar.com/vlp-16-lite.html)
     - [User manual](https://velodynelidar.com/docs/manuals/63-9243%20REV%20D%20MANUAL,USERS,VLP-16.pdf)
     - [ROS integration instructions](http://wiki.ros.org/velodyne/Tutorials/Getting%20Started%20with%20the%20Velodyne%20VLP16)
-  - 4 Google Pixel 2 XL + gopro mounts
+  - 4 Google Pixel 2 XL + phone mounts
   - Mount to vehicle
-    - Prototype myself
-    - Circular & symmetric base => thick acrylic?
+    - Circular & symmetric base
     - Aluminium extrusions to hold to car
     - Metal stand-offs to support base (4) and lidar (1)
-    - 4 holes for gopro mounts (laser cut/drill?)
-  - OR get made externally
+    - 4 holes for phone mounts
 
 ### ROS
-  - Start with simple system:
-    - Publisher 1: fetches cloudpoints from lidar, publishes them (topic: /velodyne_points)
-    - Publisher 2: fetches processed frames from server, publishes them (topic: frames)
-    - Subscriber: subscribes to both
-      - Interpolates info from where cars are in the frame with which cloudpoints correspond to said car
-      - Calculates the approximate distance & angle to said car (mean/average?)
-      - Exports each frame with the car(s) detected and their distance info
+  - hNode: ROS node running in each of the phones -> publish phone sensor data (incl cameras)
+  - [velodyne](https://github.com/ros-drivers/velodyne): driver for the VLP16, publishes the 3D cloudpoints to ```/velodyne_points```.
+  - phone_streams: listens to compressed image data from phones, uncompress it, and publish raw in new topic
+  - video_transport: listens to both the raw cameras topics and the cloudpoints topics, waits until it has data from all 5 within the same time frame, and the superimposes the cloudpoints on top of the streams.
+  - [but_calibration_camera_velodyne](https://github.com/robofit/but_velodyne/tree/master/but_calibration_camera_velodyne): node to callibrate the coordinate systems of the Lidar and 4 cameras.
 
 ### Server (Recognition System)
-  - Get app on phones to stream footage to server => research existing
-  - Accepts connection from 4 clients (4 smartphones)
-  - For each frame per client, recognises cars
-    - Use [Mask RCNN](https://arxiv.org/pdf/1703.06870.pdf)
-      - [Possible ROS + tensorflow implementation](https://github.com/akio/mask_rcnn_ros)
-  - Outputs frame with boundary shapes for each car
-    - Message format: TBD
+  - TBD
 
 ### Visualisation
-  - NGINX w/ RTMP
+  - NGINX w/ RTMP?
