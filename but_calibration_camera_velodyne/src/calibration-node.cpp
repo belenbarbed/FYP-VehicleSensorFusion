@@ -54,11 +54,19 @@ bool writeAllInputs()
 {
   bool result = true;
 
-  pointcloud.save("velodyne_pc.pcd");
-  cv::imwrite("frame_rgb.png", frame_rgb);
-  cv::FileStorage fs_P("projection.yml", cv::FileStorage::WRITE);
+  pointcloud.save("/home/soteris-group/bb2115/catkin_ws/velodyne_pc.pcd");
+  cv::imwrite("/home/soteris-group/bb2115/catkin_ws/frame_rgb.png", frame_rgb);
+  // DEBUG
+  cv::namedWindow("view_1");
+  cv::imshow("view_1", frame_rgb);
+  cv::waitKey(1);
+
+  cv::FileStorage fs_P("/home/soteris-group/bb2115/catkin_ws/projection.yml", cv::FileStorage::WRITE);
   fs_P << "P" << projection_matrix;
   fs_P.release();
+
+  // DEBUG
+  ROS_INFO_STREAM("SAVED THE THINGS");
 
   return result;
 }
@@ -74,6 +82,8 @@ Calibration6DoF calibration(bool doRefinement = false)
   vector<Point2f> centers2D;
   if (!marker.detectCirclesInImage(centers2D, radii2D))
   {
+    // DEBUG
+    ROS_INFO_STREAM("FAILED TO DETECT CIRCLES IN IMAGE");
     return Calibration6DoF::wrong();
   }
   float radius2D = accumulate(radii2D.begin(), radii2D.end(), 0.0) / radii2D.size();
@@ -82,6 +92,8 @@ Calibration6DoF calibration(bool doRefinement = false)
   vector<Point3f> centers3D;
   if (!marker.detectCirclesInPointCloud(centers3D, radii3D))
   {
+    // DEBUG
+    ROS_INFO_STREAM("FAILED TO DETECT CIRCLES IN POINTCLOUD");
     return Calibration6DoF::wrong();
   }
   float radius3D = accumulate(radii3D.begin(), radii3D.end(), 0.0) / radii3D.size();
@@ -118,9 +130,15 @@ void callback(const sensor_msgs::ImageConstPtr& msg_img, const sensor_msgs::Came
   ROS_INFO_STREAM( "Camera info received at " << msg_info->header.stamp.toSec());
   ROS_INFO_STREAM( "Velodyne scan received at " << msg_pc->header.stamp.toSec());
 
+  // DEBUG
+  ROS_INFO_STREAM("RECEIVED EVERYTHING");
+
   // Loading camera image:
   cv_bridge::CvImagePtr cv_ptr = cv_bridge::toCvCopy(msg_img, sensor_msgs::image_encodings::BGR8);
   frame_rgb = cv_ptr->image;
+
+  // DEBUG
+  ROS_INFO_STREAM("LOADED CAMERA IMAGE");
 
   // Loading projection matrix:
   float p[12];
@@ -132,16 +150,29 @@ void callback(const sensor_msgs::ImageConstPtr& msg_img, const sensor_msgs::Came
   }
   cv::Mat(3, 4, CV_32FC1, &p).copyTo(projection_matrix);
 
+  // DEBUG
+  ROS_INFO_STREAM("LOADED PROJECTION MATRIX");
+
   // Loading Velodyne point cloud
   PointCloud<Velodyne::Point> pc;
   fromROSMsg(*msg_pc, pc);
 
+  // DEBUG
+  ROS_INFO_STREAM("LOADED POINTCLOUD");
+
   // x := x, y := -z, z := y,
   pointcloud = Velodyne::Velodyne(pc).transform(0, 0, 0, M_PI / 2, 0, 0);
 
+  // DEBUG
+  ROS_INFO_STREAM("DID TRANSFORM");
+
   // calibration:
   writeAllInputs();
+  // DEBUG
+  ROS_INFO_STREAM("WROTE ALL INPUTS");
   Calibration6DoF calibrationParams = calibration(doRefinement);
+  // DEBUG
+  ROS_INFO_STREAM("DID CALIBRATION");
   if (calibrationParams.isGood())
   {
     ROS_INFO_STREAM("Calibration succeeded, found parameters:");

@@ -62,6 +62,9 @@ rosrun video_transport video_subscriber_sync
 to combine the phone camera frames with the lidar cloudpoints.
 
 We are currently working on the callibration of these two systems.
+```
+roslaunch but_calibration_camera_velodyne calibration_coarse.launch
+```
 
 ## Troubleshooting
 
@@ -74,6 +77,8 @@ rm -rf devel/
 catkin_make install
 catkin_make
 ```
+
+If the phones and lidar don't sync properly, check their exact system time. If it's not the same, down to the second, one may have sync issues. For reference, use the [official US atomic time website](time.gov) to match their system times.
 
 ## Project Sections
 

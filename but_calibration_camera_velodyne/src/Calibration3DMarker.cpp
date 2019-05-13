@@ -31,7 +31,11 @@ Calibration3DMarker::Calibration3DMarker(cv::Mat _frame_gray, cv::Mat _P, ::Poin
 
   Velodyne::Velodyne visible_scan(visible_cloud);
   visible_scan.normalizeIntensity();
-  Velodyne::Velodyne thresholded_scan = visible_scan.threshold(0.1);
+  Velodyne::Velodyne thresholded_scan = visible_scan.threshold(0.5);
+
+  // DEBUG: save intermediate pointcloud
+  visible_scan.save("/home/soteris-group/bb2115/catkin_ws/visible_scan.pcd");
+  thresholded_scan.save("/home/soteris-group/bb2115/catkin_ws/thresholded_scan.pcd");
 
   PointCloud<PointXYZ>::Ptr xyz_cloud_ptr(thresholded_scan.toPointsXYZ());
 
@@ -40,6 +44,9 @@ Calibration3DMarker::Calibration3DMarker(cv::Mat _frame_gray, cv::Mat _P, ::Poin
   RandomSampleConsensus<PointXYZ> ransac(model_p);
   ransac.setDistanceThreshold(0.05);
   ransac.computeModel();
+
+  // DEBUG
+  ROS_INFO_STREAM("DETECTING PLANE");
 
   std::vector<int> inliers_indicies;
   ransac.getInliers(inliers_indicies);
@@ -86,7 +93,7 @@ bool Calibration3DMarker::detectCirclesInPointCloud(vector<Point3f> &centers, ve
   int round = 1;
   vector<PointXYZ> spheres_centers;
   bool detected = false;
-  for (int iterations = 0; iterations < 64; iterations++)
+  for (int iterations = 0; iterations < 2048; iterations++)
   {
     /*cerr << endl << " =========== ROUND " << round++ << " =========== "
      << endl << endl;

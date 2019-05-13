@@ -1,6 +1,6 @@
 but_calibration_camera_velodyne:
-  camera_frame_topic: /pixel_1/camera0/image/raw
+  camera_frame_topic: /pixel_1/camera0/image/not_compressed
   camera_info_topic: /pixel_1/camera0/camera_info
-  marker: {circles_distance: 0.15, circles_radius: 0.05}
+  marker: {circles_distance: 0.23, circles_radius: 0.0825}
   velodyne_topic: /velodyne_points
 
