@@ -161,7 +161,7 @@ public:
     float focal_len = projection.at<float>(0, 0);
 
     // t_z:
-    translation[INDEX::Z] = radius3D * focal_len / (radius2D - velodyne.front().z);
+    translation[INDEX::Z] = radius3D * focal_len / radius2D - velodyne.front().z;
 
     float principal_x = projection.at<float>(0, 2);
     float principal_y = projection.at<float>(1, 2);

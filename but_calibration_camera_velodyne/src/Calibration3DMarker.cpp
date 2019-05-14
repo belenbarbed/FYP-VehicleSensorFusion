@@ -31,7 +31,7 @@ Calibration3DMarker::Calibration3DMarker(cv::Mat _frame_gray, cv::Mat _P, ::Poin
 
   Velodyne::Velodyne visible_scan(visible_cloud);
   visible_scan.normalizeIntensity();
-  Velodyne::Velodyne thresholded_scan = visible_scan.threshold(0.5);
+  Velodyne::Velodyne thresholded_scan = visible_scan.threshold(0.4);
 
   // DEBUG: save intermediate pointcloud
   visible_scan.save("/home/soteris-group/bb2115/catkin_ws/visible_scan.pcd");

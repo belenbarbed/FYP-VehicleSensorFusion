@@ -31,20 +31,19 @@ using namespace pcl;
 using namespace but_calibration_camera_velodyne;
 
 Mat projection_matrix;
-vector<float> DoF = {0.05, 0, 0, 0, -0.2, 0.5};
+vector<float> DoF;
 
-void cameraInfo()
+void cameraInfoCallback(const sensor_msgs::CameraInfoConstPtr& msg)
 {
   float p[12];
-  for (int i = 0; i < 12; i++)
+  float *pp = p;
+  for (boost::array<double, 12ul>::const_iterator i = msg->P.begin(); i != msg->P.end(); i++)
   {
-    p[i] = 0;
+    *pp = (float)(*i);
+    pp++;
+
   }
 
-  p[0] = 4.0;
-  p[5] = 4.0;
-  p[10] = 1.0;
-  ROS_INFO_STREAM(p[1]);
   cv::Mat(3, 4, CV_32FC1, &p).copyTo(projection_matrix);
 }
 
@@ -78,8 +77,6 @@ void callback(const sensor_msgs::ImageConstPtr& msg_1,
 
 int main(int argc, char **argv)
 {
-  cameraInfo();
-
   cv::namedWindow("view_1");
 
   ros::init(argc, argv, "video_subscriber");
@@ -92,6 +89,10 @@ int main(int argc, char **argv)
   // image_transport::SubscriberFilter sub_4(it, "/pixel_4/camera0/image", 1);
   // image_transport::SubscriberFilter sub_2(it, "/phone_5/camera0/image", 1);
   message_filters::Subscriber<sensor_msgs::PointCloud2> sub_pc(nh, "/velodyne_points", 10);
+
+  ros::Subscriber info_sub = nh.subscribe("/pixel_1/camera0/camera_info", 10, cameraInfoCallback);
+
+  nh.getParam("/but_calibration_camera_velodyne/6DoF", DoF);
   
   typedef message_filters::sync_policies::ApproximateTime<
     sensor_msgs::Image, sensor_msgs::PointCloud2

@@ -23,9 +23,9 @@ def pixel_1_callback(data):
 
         # Camera info
         pixel_1_info = CameraInfo()
-        pixel_1_info.P = [493.7242431641,  0.0000000000, 322.0943908691, 0.0,
-                            0.0000000000, 96.9177246094, 231.7220153809, 0.0,
-                            0.0,           0.0,            1.0,          0.0]
+        pixel_1_info.P = [515.4,   0.0, 323.0, 0.0,
+                            0.0, 518.7, 233.9, 0.0,
+                            0.0,   0.0,   1.0, 0.0]
         pixel_1_info.header.stamp = data.header.stamp
         pub1_info.publish(pixel_1_info)
     else:

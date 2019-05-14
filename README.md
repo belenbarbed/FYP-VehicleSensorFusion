@@ -29,7 +29,7 @@ To emulate part of the functionality of autonomous vehicles. You will build a ca
 
 The phones are running the app [hNode](https://play.google.com/store/apps/details?id=com.husarion.node&hl=en_GB), which establishes a network between them and the laptop [(article)](https://medium.com/husarion-blog/dont-buy-expensive-sensors-for-your-robot-use-your-smartphone-24380eab521). After being registered on the same [network](https://app.husarnet.com/network/849), running ```rostopic list``` shows the topics the phones are publishing with their sensor data.
 
-To calibrate the phone cameras, we used the app [Vizario.Cam](https://play.google.com/store/apps/details?id=io.ar4.vizarcam&hl=en_GB) to obtain the camera projection matrix P using a 8x6 checkerboard with 24mm square size and 40 samples. Adding a column of zeroes at the side of the app's matrix K gives us said P for the camera in question.
+To calibrate the phone cameras, we used the Matlab function [cameraCalibrator](https://uk.mathworks.com/help/vision/ref/cameramatrix.html) to obtain the camera projection matrix P using a 8x6 checkerboard with 24mm square size and 40 samples. This gives us the FocalLength (f in the matrix) and the Principal points (ox and oy in the matrix).
 
 On the laptop, several commands should be run.
 
