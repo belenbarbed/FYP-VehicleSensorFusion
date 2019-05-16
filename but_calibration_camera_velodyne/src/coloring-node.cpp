@@ -41,6 +41,8 @@ string CAMERA_INFO_TOPIC;
 string VELODYNE_TOPIC;
 string VELODYNE_COLOR_TOPIC;
 
+string PIXEL;
+
 ros::Publisher pub;
 cv::Mat projection_matrix;
 
@@ -79,8 +81,16 @@ void pointCloudCallback(const sensor_msgs::PointCloud2ConstPtr& msg)
   PointCloud<Velodyne::Point> pc;
   fromROSMsg(*msg, pc);
 
-  // x := x, y := -z, z := y,
-  Velodyne::Velodyne pointcloud = Velodyne::Velodyne(pc).transform(0, 0, 0, M_PI / 2, 0, 0);
+  Velodyne::Velodyne pointcloud;
+  if(PIXEL == "2") {
+    pointcloud = Velodyne::Velodyne(pc).transform(0, 0, 0, M_PI / 2, -M_PI / 2, 0);
+  } else if (PIXEL == "3") {
+    pointcloud = Velodyne::Velodyne(pc).transform(0, 0, 0, M_PI / 2, M_PI, 0);
+  } else if (PIXEL == "4") {
+    pointcloud = Velodyne::Velodyne(pc).transform(0, 0, 0, M_PI / 2, M_PI / 2, 0);
+  } else {
+    pointcloud = Velodyne::Velodyne(pc).transform(0, 0, 0, M_PI / 2, 0, 0);
+  }
 
   Image::Image img(frame_rgb);
   Velodyne::Velodyne transformed = pointcloud.transform(DoF);
@@ -91,8 +101,17 @@ void pointCloudCallback(const sensor_msgs::PointCloud2ConstPtr& msg)
 
   PointCloud<PointXYZRGB> color_cloud = visible_scan.colour(frame_rgb, projection_matrix);
 
-  // reverse axix switching:
-  Eigen::Affine3f transf = getTransformation(0, 0, 0, -M_PI / 2, 0, 0);
+  // reverse axis switching:
+  Eigen::Affine3f transf;
+  if(PIXEL == "2") {
+    transf = getTransformation(0, 0, 0, -M_PI / 2, 0, -M_PI / 2);
+  } else if (PIXEL == "3") {
+    transf = getTransformation(0, 0, 0, -M_PI / 2, 0, M_PI);
+  } else if (PIXEL == "4") {
+    transf = getTransformation(0, 0, 0, -M_PI / 2, 0, M_PI / 2);
+  } else {
+    transf = getTransformation(0, 0, 0, -M_PI / 2, 0, 0);
+  }
   transformPointCloud(color_cloud, color_cloud, transf);
 
   sensor_msgs::PointCloud2 color_cloud2;
@@ -104,14 +123,17 @@ void pointCloudCallback(const sensor_msgs::PointCloud2ConstPtr& msg)
 
 int main(int argc, char** argv)
 {
-  ros::init(argc, argv, "coloring_node");
+  ros::init(argc, argv, "coloring_node_" + PIXEL);
 
   ros::NodeHandle n;
-  n.getParam("/but_calibration_camera_velodyne/camera_frame_topic", CAMERA_FRAME_TOPIC);
-  n.getParam("/but_calibration_camera_velodyne/camera_info_topic", CAMERA_INFO_TOPIC);
   n.getParam("/but_calibration_camera_velodyne/velodyne_topic", VELODYNE_TOPIC);
-  n.getParam("/but_calibration_camera_velodyne/velodyne_color_topic", VELODYNE_COLOR_TOPIC);
-  n.getParam("/but_calibration_camera_velodyne/6DoF", DoF);
+
+  PIXEL = argv[1];
+  CAMERA_FRAME_TOPIC = "/pixel_" + PIXEL + "/camera0/image/not_compressed";
+  CAMERA_INFO_TOPIC  = "/pixel_" + PIXEL + "/camera0/camera_info";
+  n.getParam("/but_calibration_camera_velodyne/6DoF_" + PIXEL, DoF);
+  VELODYNE_COLOR_TOPIC = "/velodyne_colored_points_" + PIXEL;
+
 
   pub = n.advertise<sensor_msgs::PointCloud2>(VELODYNE_COLOR_TOPIC, 1);
 
