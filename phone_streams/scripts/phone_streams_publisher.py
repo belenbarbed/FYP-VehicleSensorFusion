@@ -6,93 +6,29 @@ import cv2
 from cv_bridge import CvBridge
 import numpy as np
 
-def pixel_1_callback(data):
+def image_callback(data, args):
     global br
-    global pub1_raw
-    global pub1_info
+    pub_raw  = args[0]
+    pub_info = args[1]
+    pixel_no = args[2]
     if(data.data != []):
         # From compressed to raw
-        rospy.loginfo("Image received from pixel_1")
+        rospy.loginfo("Image received from pixel-" + pixel_no)
         img = br.compressed_imgmsg_to_cv2(data, desired_encoding="bgr8")
         # time = str(data.header.stamp.secs) + ("00000000" if data.header.stamp.nsecs == 0 else str(data.header.stamp.nsecs))
         # cv2.imwrite("/home/soteris-group/phone_test/pixel_1/" + time + ".jpeg", img)
         msg = br.cv2_to_imgmsg(img)
         msg.header.stamp = data.header.stamp
         msg.encoding = "bgr8"
-        pub1_raw.publish(msg)
+        pub_raw.publish(msg)
 
-        # Camera info
-        pixel_1_info = CameraInfo()
-        pixel_1_info.P = [515.4,   0.0, 323.0, 0.0,
-                            0.0, 518.7, 233.9, 0.0,
-                            0.0,   0.0,   1.0, 0.0]
-        pixel_1_info.header.stamp = data.header.stamp
-        pub1_info.publish(pixel_1_info)
-    else:
-        rospy.loginfo("Something went wrong")
-"""
-def pixel_2_callback(data):
-    global br
-    global pub2
-    if(data.data != []):
-        rospy.loginfo("Image received from pixel_2")
-        img = br.compressed_imgmsg_to_cv2(data, desired_encoding="bgr8")
-        # time = str(data.header.stamp.secs) + ("00000000" if data.header.stamp.nsecs == 0 else str(data.header.stamp.nsecs))
-        # cv2.imwrite("/home/soteris-group/phone_test/pixel_2/" + time + ".jpeg", img)
-        msg = br.cv2_to_imgmsg(img)
-        msg.header.stamp.secs = data.header.stamp.secs
-        msg.header.stamp.nsecs = data.header.stamp.nsecs
-        msg.encoding = "bgr8"
-        pub1.publish(msg)
-    else:
-        rospy.loginfo("Something went wrong")
-
-def pixel_3_callback(data):
-    global br
-    global pub3
-    if(data.data != []):
-        rospy.loginfo("Image received from pixel_3")
-        img = br.compressed_imgmsg_to_cv2(data, desired_encoding="bgr8")
-        # time = str(data.header.stamp.secs) + ("00000000" if data.header.stamp.nsecs == 0 else str(data.header.stamp.nsecs))
-        # cv2.imwrite("/home/soteris-group/phone_test/pixel_3/" + time + ".jpeg", img)
-        msg = br.cv2_to_imgmsg(img)
-        msg.header.stamp.secs = data.header.stamp.secs
-        msg.header.stamp.nsecs = data.header.stamp.nsecs
-        msg.encoding = "bgr8"
-        pub1.publish(msg)
-    else:
-        rospy.loginfo("Something went wrong")
-
-def pixel_4_callback(data):
-    global br
-    global pub4
-    if(data.data != []):
-        rospy.loginfo("Image received from pixel_4")
-        img = br.compressed_imgmsg_to_cv2(data, desired_encoding="bgr8")
-        # time = str(data.header.stamp.secs) + ("00000000" if data.header.stamp.nsecs == 0 else str(data.header.stamp.nsecs))
-        # cv2.imwrite("/home/soteris-group/phone_test/pixel_4/" + time + ".jpeg", img)
-        msg = br.cv2_to_imgmsg(img)
-        msg.header.stamp.secs = data.header.stamp.secs
-        msg.header.stamp.nsecs = data.header.stamp.nsecs
-        msg.encoding = "bgr8"
-        pub1.publish(msg)
-    else:
-        rospy.loginfo("Something went wrong")
-"""
-# DEBUG: remove this test phone
-def phone_5_callback(data):
-    global br
-    global pub5
-    if(data.data != []):
-        rospy.loginfo("Image received from phone_5")
-        img = br.compressed_imgmsg_to_cv2(data, desired_encoding="bgr8")
-        # time = str(data.header.stamp.secs) + str(data.header.stamp.nsecs)
-        # cv2.imwrite("/home/soteris-group/phone_test/phone_5/" + time + ".jpeg", img)
-        msg = br.cv2_to_imgmsg(img)
-        msg.header.stamp.secs = data.header.stamp.secs
-        msg.header.stamp.nsecs = data.header.stamp.nsecs
-        msg.encoding = "bgr8"
-        pub5.publish(msg)
+        # Camera info - projection matrix
+        pixel_info = CameraInfo()
+        pixel_info.P = [515.4,   0.0, 323.0, 0.0,
+                          0.0, 518.7, 233.9, 0.0,
+                          0.0,   0.0,   1.0, 0.0]
+        pixel_info.header.stamp = data.header.stamp
+        pub_info.publish(pixel_info)
     else:
         rospy.loginfo("Something went wrong")
 
@@ -104,28 +40,19 @@ def main():
     global br
     br = CvBridge()
 
-    global pub1_raw
-    pub1_raw = rospy.Publisher("/pixel_1/camera0/image/not_compressed", Image, queue_size=1)
-    global pub1_info
+    pub1_raw  = rospy.Publisher("/pixel_1/camera0/image/not_compressed", Image, queue_size=1)
     pub1_info = rospy.Publisher("/pixel_1/camera0/camera_info", CameraInfo, queue_size=1)
-    # global pub2
-    # pub1 = rospy.Publisher("/pixel_2/camera0/image/raw", Image, queue_size=10)
-    # global pub3
-    # pub1 = rospy.Publisher("/pixel_3/camera0/image/raw", Image, queue_size=10)
-    # global pub4
-    # pub1 = rospy.Publisher("/pixel_4/camera0/image/raw", Image, queue_size=10)
+    pub2_raw  = rospy.Publisher("/pixel_2/camera0/image/not_compressed", Image, queue_size=1)
+    pub2_info = rospy.Publisher("/pixel_2/camera0/camera_info", CameraInfo, queue_size=1)
+    pub3_raw  = rospy.Publisher("/pixel_3/camera0/image/not_compressed", Image, queue_size=1)
+    pub3_info = rospy.Publisher("/pixel_3/camera0/camera_info", CameraInfo, queue_size=1)
+    pub4_raw  = rospy.Publisher("/pixel_4/camera0/image/not_compressed", Image, queue_size=1)
+    pub4_info = rospy.Publisher("/pixel_4/camera0/camera_info", CameraInfo, queue_size=1)
 
-    # DEBUG: remove this test phone
-    # global pub5
-    # pub5 = rospy.Publisher("/phone_5/camera0/image/raw", Image, queue_size=10)
-
-    rospy.Subscriber("/pixel_1/camera0/image/compressed", CompressedImage, pixel_1_callback)
-    # rospy.Subscriber("/pixel_2/camera0/image/compressed", CompressedImage, pixel_2_callback)
-    # rospy.Subscriber("/pixel_3/camera0/image/compressed", CompressedImage, pixel_3_callback)
-    # rospy.Subscriber("/pixel_4/camera0/image/compressed", CompressedImage, pixel_4_callback)
-
-    # DEBUG: remove this test phone
-    # rospy.Subscriber("/phone_5/camera0/image/compressed", CompressedImage, phone_5_callback)
+    rospy.Subscriber("/pixel_1/camera0/image/compressed", CompressedImage, image_callback, (pub1_raw, pub1_info, "1"))
+    rospy.Subscriber("/pixel_2/camera0/image/compressed", CompressedImage, image_callback, (pub2_raw, pub2_info, "2"))
+    rospy.Subscriber("/pixel_3/camera0/image/compressed", CompressedImage, image_callback, (pub3_raw, pub3_info, "3"))
+    rospy.Subscriber("/pixel_4/camera0/image/compressed", CompressedImage, image_callback, (pub4_raw, pub4_info, "4"))
 
     rospy.spin()
 
