@@ -56,10 +56,6 @@ bool writeAllInputs()
 
   pointcloud.save("/home/soteris-group/bb2115/catkin_ws/velodyne_pc.pcd");
   cv::imwrite("/home/soteris-group/bb2115/catkin_ws/frame_rgb.png", frame_rgb);
-  // DEBUG
-  cv::namedWindow("view_1");
-  cv::imshow("view_1", frame_rgb);
-  cv::waitKey(1);
 
   cv::FileStorage fs_P("/home/soteris-group/bb2115/catkin_ws/projection.yml", cv::FileStorage::WRITE);
   fs_P << "P" << projection_matrix;
@@ -75,6 +71,7 @@ Calibration6DoF calibration(bool doRefinement = false)
 {
   Mat frame_gray;
   cvtColor(frame_rgb, frame_gray, CV_BGR2GRAY);
+  cv::imwrite("/home/soteris-group/bb2115/catkin_ws/frame_gray.png", frame_gray);
 
   // Marker detection:
   Calibration3DMarker marker(frame_gray, projection_matrix, pointcloud.getPointCloud(), STRAIGHT_DISTANCE, RADIUS);
@@ -86,6 +83,7 @@ Calibration6DoF calibration(bool doRefinement = false)
     ROS_INFO_STREAM("FAILED TO DETECT CIRCLES IN IMAGE");
     return Calibration6DoF::wrong();
   }
+  ROS_INFO_STREAM("DETECTED CIRCLES IN IMAGE");
   float radius2D = accumulate(radii2D.begin(), radii2D.end(), 0.0) / radii2D.size();
 
   vector<float> radii3D;
@@ -96,6 +94,7 @@ Calibration6DoF calibration(bool doRefinement = false)
     ROS_INFO_STREAM("FAILED TO DETECT CIRCLES IN POINTCLOUD");
     return Calibration6DoF::wrong();
   }
+  ROS_INFO_STREAM("DETECTED CIRCLES IN POINTCLOUD");
   float radius3D = accumulate(radii3D.begin(), radii3D.end(), 0.0) / radii3D.size();
 
   // rough calibration
@@ -160,8 +159,14 @@ void callback(const sensor_msgs::ImageConstPtr& msg_img, const sensor_msgs::Came
   // DEBUG
   ROS_INFO_STREAM("LOADED POINTCLOUD");
 
-  // x := x, y := -z, z := y,
+  // for pixel_1: x := x, y := -z, z := y,
   pointcloud = Velodyne::Velodyne(pc).transform(0, 0, 0, M_PI / 2, 0, 0);
+  // for pixel_2:
+  // pointcloud = Velodyne::Velodyne(pc).transform(0, 0, 0, M_PI / 2, -M_PI / 2, 0);
+  // for pixel_3:
+  // pointcloud = Velodyne::Velodyne(pc).transform(0, 0, 0, M_PI / 2, M_PI, 0);
+  // for pixel_4:
+  // pointcloud = Velodyne::Velodyne(pc).transform(0, 0, 0, M_PI / 2, M_PI / 2, 0);
 
   // DEBUG
   ROS_INFO_STREAM("DID TRANSFORM");

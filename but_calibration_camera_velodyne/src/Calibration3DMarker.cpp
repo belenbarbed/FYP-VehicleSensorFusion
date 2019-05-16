@@ -31,7 +31,8 @@ Calibration3DMarker::Calibration3DMarker(cv::Mat _frame_gray, cv::Mat _P, ::Poin
 
   Velodyne::Velodyne visible_scan(visible_cloud);
   visible_scan.normalizeIntensity();
-  Velodyne::Velodyne thresholded_scan = visible_scan.threshold(0.4);
+  // HACK: change threshold if it can't detect circles in pointcloud
+  Velodyne::Velodyne thresholded_scan = visible_scan.threshold(0.1);
 
   // DEBUG: save intermediate pointcloud
   visible_scan.save("/home/soteris-group/bb2115/catkin_ws/visible_scan.pcd");
@@ -89,7 +90,7 @@ bool Calibration3DMarker::detectCirclesInPointCloud(vector<Point3f> &centers, ve
   PointCloud<PointXYZ>::Ptr detection_cloud(new PointCloud<PointXYZ>);
   *detection_cloud += this->plane;
 
-  float tolerance = 0.03; // 3cm
+  float tolerance = 0.05; // 5cm
   int round = 1;
   vector<PointXYZ> spheres_centers;
   bool detected = false;
