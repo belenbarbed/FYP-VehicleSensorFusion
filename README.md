@@ -8,7 +8,7 @@ Supervisor: Soteris Demetriou
 
 [Kaifeng Yan](https://github.com/Kai-2333)
 
-Flora Qin
+[Flora Qin](https://github.com/FloraQin0325)
 
 ## Goal
 To emulate part of the functionality of autonomous vehicles. You will build a car mount which can collect visual and distance information, and detect objects around the vehicle as well as their angle and distance from it. It should also be able to display in real time the captured information.
@@ -61,9 +61,19 @@ rosrun video_transport video_subscriber_sync
 ```
 to combine the phone camera frames with the lidar cloudpoints.
 
-We are currently working on the callibration of these two systems.
+For now, the 4 phones can be calibrated against the lidar separately. To do so, edit [calibration-node.cpp](but_calibration_camera_velodyne/src/calibration-node.cpp) and [calibration.yaml](but_calibration_camera_velodyne/conf/calibration.yaml) to select the phone in question. Then, run:
 ```
-roslaunch but_calibration_camera_velodyne calibration_coarse.launch
+roslaunch but_calibration_camera_velodyne calibration_fine.launch
+```
+The results from this calibration should be saved in [coloring.yaml](but_calibration_camera_velodyne/conf/coloring.yaml).
+
+To generate all 4 colored cloudpoints from the 4 phones, run:
+```
+roslaunch but_calibration_camera_velodyne coloring.launch
+```
+And then, to visualise them, use rviz and listen to all 4 topics (/velodyne_colored_points_1-4):
+```
+rosrun rviz rviz -f velodyne
 ```
 
 ## Troubleshooting
