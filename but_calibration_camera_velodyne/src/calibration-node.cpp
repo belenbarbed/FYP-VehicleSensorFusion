@@ -40,6 +40,7 @@ using namespace but_calibration_camera_velodyne;
 string CAMERA_FRAME_TOPIC;
 string CAMERA_INFO_TOPIC;
 string VELODYNE_TOPIC;
+string PIXEL = "1";
 
 // marker properties:
 double STRAIGHT_DISTANCE; // 23cm
@@ -159,14 +160,16 @@ void callback(const sensor_msgs::ImageConstPtr& msg_img, const sensor_msgs::Came
   // DEBUG
   ROS_INFO_STREAM("LOADED POINTCLOUD");
 
-  // for pixel_1: x := x, y := -z, z := y,
-  pointcloud = Velodyne::Velodyne(pc).transform(0, 0, 0, M_PI / 2, 0, 0);
-  // for pixel_2:
-  // pointcloud = Velodyne::Velodyne(pc).transform(0, 0, 0, M_PI / 2, -M_PI / 2, 0);
-  // for pixel_3:
-  // pointcloud = Velodyne::Velodyne(pc).transform(0, 0, 0, M_PI / 2, M_PI, 0);
-  // for pixel_4:
-  // pointcloud = Velodyne::Velodyne(pc).transform(0, 0, 0, M_PI / 2, M_PI / 2, 0);
+  if (PIXEL == "2") {
+    pointcloud = Velodyne::Velodyne(pc).transform(0, 0, 0, M_PI / 2, -M_PI / 2, 0);
+  } else if (PIXEL == "3") {
+    pointcloud = Velodyne::Velodyne(pc).transform(0, 0, 0, M_PI / 2, M_PI, 0);
+  } else if (PIXEL == "4") {
+    pointcloud = Velodyne::Velodyne(pc).transform(0, 0, 0, M_PI / 2, M_PI / 2, 0);
+  } else {
+    //x := x, y := -z, z := y,
+    pointcloud = Velodyne::Velodyne(pc).transform(0, 0, 0, M_PI / 2, 0, 0);
+  }
 
   // DEBUG
   ROS_INFO_STREAM("DID TRANSFORM");
@@ -195,17 +198,12 @@ int main(int argc, char** argv)
 {
   ros::init(argc, argv, "calibration_node");
 
-  int c;
-  while ((c = getopt(argc, argv, "r")) != -1)
-  {
-    switch (c)
-    {
-      case 'r':
-        doRefinement = true;
-        break;
-      default:
-        return EXIT_FAILURE;
-    }
+  if (argc == 3) {
+    PIXEL = argv[1];
+    doRefinement = true;
+  }
+  if (argc == 2) {
+    PIXEL = argv[1];
   }
 
   ros::NodeHandle n;
