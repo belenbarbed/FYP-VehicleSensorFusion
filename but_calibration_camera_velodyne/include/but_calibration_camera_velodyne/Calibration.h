@@ -186,8 +186,10 @@ public:
                                     float z_rough, float max_translation, float max_rotation, unsigned steps,
                                     Calibration6DoF &best_calibration, Calibration6DoF &average)
   {
+    scan.save("/home/soteris-group/bb2115/catkin_ws/fine_scan.pcd");
     scan.intensityByRangeDiff();
-    scan = scan.threshold(0.05);
+    scan = scan.threshold(0.01);
+    scan.save("/home/soteris-group/bb2115/catkin_ws/fine_scan_thresholded.pcd");
 
     img = Image::Image(img.computeIDTEdgeImage());
 
