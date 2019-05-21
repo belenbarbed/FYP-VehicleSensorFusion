@@ -61,17 +61,21 @@ rosrun video_transport video_subscriber_sync
 ```
 to combine the phone camera frames with the lidar cloudpoints.
 
-For now, the 4 phones can be calibrated against the lidar separately. To do so, edit [calibration-node.cpp](but_calibration_camera_velodyne/src/calibration-node.cpp) and [calibration.yaml](but_calibration_camera_velodyne/conf/calibration.yaml) to select the phone in question. Then, run:
+The 4 phones can be calibrated against the lidar separately. To do so, run:
 ```
 roslaunch but_calibration_camera_velodyne calibration_fine.launch pixel:="[PIXEL_NO]"
 ```
-The results from this calibration should be saved in [coloring.yaml](but_calibration_camera_velodyne/conf/coloring.yaml).
+with PIXEL_NO being the phone one wants to calibrate (1-4). The results from this calibration should be saved in [coloring.yaml](but_calibration_camera_velodyne/conf/coloring.yaml).
 
 To generate all 4 colored cloudpoints from the 4 phones, run:
 ```
 roslaunch but_calibration_camera_velodyne coloring.launch
 ```
-And then, to visualise them, use rviz and listen to all 4 topics (/velodyne_colored_points_1-4):
+This generates 4 coloured cloudpoint topics, which can be joined using:
+```
+roslaunch visualization join_pointclouds.launch
+```
+And then visualised with rviz (listen to /velodyne_colored_points_all):
 ```
 rosrun rviz rviz -f velodyne
 ```
