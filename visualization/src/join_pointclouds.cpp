@@ -7,6 +7,7 @@
 #include <message_filters/synchronizer.h>
 #include <message_filters/sync_policies/approximate_time.h>
 #include <pcl/io/pcd_io.h>
+#include <pcl_conversions/pcl_conversions.h>
 #include <pcl/point_types.h>
 #include <ros/ros.h>
 #include <sensor_msgs/PointCloud2.h>
@@ -23,7 +24,6 @@
 // #include <pcl/common/eigen.h>
 // #include <pcl/common/transforms.h>
 // #include <pcl/point_cloud.h>
-// #include <pcl_conversions/pcl_conversions.h>
 // #include <pcl_ros/point_cloud.h>
 // #include <velodyne_pointcloud/point_types.h>
 
@@ -42,21 +42,31 @@ void callback(
   ROS_INFO_STREAM("in callback");
 
   sensor_msgs::PointCloud2 pc_1 = *msg_pc_1;
+  pcl::PCLPointCloud2 pcl_1;
+  pcl_conversions::moveToPCL(pc_1, pcl_1);
   sensor_msgs::PointCloud2 pc_2 = *msg_pc_2;
+  pcl::PCLPointCloud2 pcl_2;
+  pcl_conversions::moveToPCL(pc_2, pcl_2);
   sensor_msgs::PointCloud2 pc_3 = *msg_pc_3;
+  pcl::PCLPointCloud2 pcl_3;
+  pcl_conversions::moveToPCL(pc_3, pcl_3);
   sensor_msgs::PointCloud2 pc_4 = *msg_pc_4;
+  pcl::PCLPointCloud2 pcl_4;
+  pcl_conversions::moveToPCL(pc_4, pcl_4);
 
-  sensor_msgs::PointCloud2 tmp_1;
-  sensor_msgs::PointCloud2 tmp_2;
-  sensor_msgs::PointCloud2 final;
+  pcl::PCLPointCloud2 tmp_1;
+  pcl::PCLPointCloud2 tmp_2;
+  pcl::PCLPointCloud2 final;
+  sensor_msgs::PointCloud2 msg;
 
-  // if(pcl::concatenatePointCloud(pc_1, pc_2, tmp_1)) {
-  //   if(pcl::concatenatePointCloud(pc_3, pc_4, tmp_2)) {
-  //     if(pcl::concatenatePointCloud(tmp_1, tmp_2, final)) {
-  //       pub.publish(final);
-  //     }
-  //   }
-  // }
+  if(pcl::concatenatePointCloud(pcl_1, pcl_2, tmp_1)) {
+    if(pcl::concatenatePointCloud(pcl_3, pcl_4, tmp_2)) {
+      if(pcl::concatenatePointCloud(tmp_1, tmp_2, final)) {
+        pcl_conversions::moveFromPCL(final, msg);
+        pub.publish(msg);
+      }
+    }
+  }
 }
 
 int main(int argc, char **argv) {
