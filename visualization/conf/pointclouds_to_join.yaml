@@ -1,0 +1,8 @@
+visualization:
+  pc_to_join: [
+    /velodyne_colored_points_1,
+    /velodyne_colored_points_2,
+    /velodyne_colored_points_3,
+    /velodyne_colored_points_4
+  ]
+  target_pc: /velodyne_colored_points_all
