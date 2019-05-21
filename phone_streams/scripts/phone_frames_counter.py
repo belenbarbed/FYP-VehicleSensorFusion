@@ -9,9 +9,9 @@ def counter_callback(data, args):
     global time
     global pub
     global counters
-    pixel_no = args[0]
+    pixel_no = int(args[0])
 
-    counter[pixel_no] += 1
+    counters[pixel_no] += 1
 
     if(time < data.header.stamp.secs):
         time = data.header.stamp.secs
@@ -48,10 +48,10 @@ def main():
     global time
     time = rospy.get_rostime().secs
 
-    rospy.Subscriber("/pixel_1/camera0/image/compressed", CompressedImage, counter_callback, (0))
-    rospy.Subscriber("/pixel_2/camera0/image/compressed", CompressedImage, counter_callback, (1))
-    rospy.Subscriber("/pixel_3/camera0/image/compressed", CompressedImage, counter_callback, (2))
-    rospy.Subscriber("/pixel_4/camera0/image/compressed", CompressedImage, counter_callback, (3))
+    rospy.Subscriber("/pixel_1/camera0/image/compressed", CompressedImage, counter_callback, ("0"))
+    rospy.Subscriber("/pixel_2/camera0/image/compressed", CompressedImage, counter_callback, ("1"))
+    rospy.Subscriber("/pixel_3/camera0/image/compressed", CompressedImage, counter_callback, ("2"))
+    rospy.Subscriber("/pixel_4/camera0/image/compressed", CompressedImage, counter_callback, ("3"))
 
     rospy.spin()
 
