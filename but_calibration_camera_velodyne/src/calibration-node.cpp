@@ -38,7 +38,9 @@ using namespace pcl;
 using namespace but_calibration_camera_velodyne;
 
 string CAMERA_FRAME_TOPIC;
+vector<string> CAMERA_FRAME_TOPICS;
 string CAMERA_INFO_TOPIC;
+vector<string> CAMERA_INFO_TOPICS;
 string VELODYNE_TOPIC;
 string PIXEL = "1";
 
@@ -207,11 +209,14 @@ int main(int argc, char** argv)
   }
 
   ros::NodeHandle n;
-  n.getParam("/but_calibration_camera_velodyne/camera_frame_topic", CAMERA_FRAME_TOPIC);
-  n.getParam("/but_calibration_camera_velodyne/camera_info_topic", CAMERA_INFO_TOPIC);
+  n.getParam("/but_calibration_camera_velodyne/camera_frame_topic", CAMERA_FRAME_TOPICS);
+  n.getParam("/but_calibration_camera_velodyne/camera_info_topic", CAMERA_INFO_TOPICS);
   n.getParam("/but_calibration_camera_velodyne/velodyne_topic", VELODYNE_TOPIC);
   n.getParam("/but_calibration_camera_velodyne/marker/circles_distance", STRAIGHT_DISTANCE);
   n.getParam("/but_calibration_camera_velodyne/marker/circles_radius", RADIUS);
+
+  CAMERA_FRAME_TOPIC = CAMERA_FRAME_TOPICS[stoi(PIXEL)-1];
+  CAMERA_INFO_TOPIC = CAMERA_INFO_TOPICS[stoi(PIXEL)-1];
 
   message_filters::Subscriber<sensor_msgs::Image> image_sub(n, CAMERA_FRAME_TOPIC, 1);
   message_filters::Subscriber<sensor_msgs::CameraInfo> info_sub(n, CAMERA_INFO_TOPIC, 1);

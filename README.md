@@ -63,7 +63,7 @@ to combine the phone camera frames with the lidar cloudpoints.
 
 For now, the 4 phones can be calibrated against the lidar separately. To do so, edit [calibration-node.cpp](but_calibration_camera_velodyne/src/calibration-node.cpp) and [calibration.yaml](but_calibration_camera_velodyne/conf/calibration.yaml) to select the phone in question. Then, run:
 ```
-roslaunch but_calibration_camera_velodyne calibration_fine.launch
+roslaunch but_calibration_camera_velodyne calibration_fine.launch pixel:="[PIXEL_NO]"
 ```
 The results from this calibration should be saved in [coloring.yaml](but_calibration_camera_velodyne/conf/coloring.yaml).
 
