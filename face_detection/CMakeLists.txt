@@ -63,18 +63,17 @@ find_package(Boost REQUIRED COMPONENTS system filesystem thread)
 ##   * add "message_generation" and every package in MSG_DEP_SET to
 ##     find_package(catkin REQUIRED COMPONENTS ...)
 ##   * add "message_runtime" and every package in MSG_DEP_SET to
-catkin_package(CATKIN_DEPENDS std_msgs)
+##     catkin_package(CATKIN_DEPENDS std_msgs)
 ##   * uncomment the add_*_files sections below as needed
 ##     and list every .msg/.srv/.action file to be processed
 ##   * uncomment the generate_messages entry below
 ##   * add every package in MSG_DEP_SET to generate_messages(DEPENDENCIES ...)
 
 ## Generate messages in the 'msg' folder
-# add_message_files(
-#   FILES
-#   Message1.msg
-#   Message2.msg
-# )
+add_message_files(
+  FILES
+  Detected_Img.msg
+)
 
 ## Generate services in the 'srv' folder
 # add_service_files(
@@ -91,10 +90,11 @@ catkin_package(CATKIN_DEPENDS std_msgs)
 # )
 
 ## Generate added messages and services with any dependencies listed here
-# generate_messages(
-#   DEPENDENCIES
-#   sensor_msgs
-# )
+generate_messages(
+  DEPENDENCIES
+  sensor_msgs
+  std_msgs
+)
 
 ################################################
 ## Declare ROS dynamic reconfigure parameters ##
@@ -128,7 +128,7 @@ catkin_package(CATKIN_DEPENDS std_msgs)
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES video_transport
-#  CATKIN_DEPENDS cv_bridge image_transport message_generation message_runtime sensor_msgs
+  CATKIN_DEPENDS cv_bridge image_transport message_generation message_runtime sensor_msgs std_msgs
 #  DEPENDS system_lib
 )
 
@@ -227,12 +227,12 @@ include
 # catkin_add_nosetests(test)
 
 # add face detection node
-add_executable(face_detection src/face_detection.cpp src/Image.cpp src/Velodyne.cpp)
-add_dependencies(face_detection ${catkin_EXPORTED_TARGETS} ${${PROJECT_NAME}_EXPORTED_TARGETS})
-target_link_libraries(face_detection ${catkin_LIBRARIES} ${OpenCV_LIBRARIES} ${PCL_LIBRARIES})
+add_executable(face_detection_cpp src/face_detection_cpp.cpp src/Image.cpp src/Velodyne.cpp)
+add_dependencies(face_detection_cpp ${catkin_EXPORTED_TARGETS} ${${PROJECT_NAME}_EXPORTED_TARGETS})
+target_link_libraries(face_detection_cpp ${catkin_LIBRARIES} ${OpenCV_LIBRARIES} ${PCL_LIBRARIES})
 
 # Mark executables and/or libraries for installation
-install(TARGETS face_detection 
+install(TARGETS face_detection_cpp 
   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}

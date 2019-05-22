@@ -152,7 +152,7 @@ int main(int argc, char **argv)
   //-- 1. Load the cascades
    if( !face_cascade.load("/home/soteris-group/bb2115/catkin_ws/src/face_detection/src/haarcascade_frontalface_alt.xml") ){ printf("--(!)Error loading\n"); return -1; };
 
-  ros::init(argc, argv, "face_detection");
+  ros::init(argc, argv, "face_detection_cpp");
   ros::NodeHandle nh;
 
   ros::NodeHandle local_nh("~");
