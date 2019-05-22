@@ -15,7 +15,7 @@
 #include <message_filters/sync_policies/approximate_time.h>
 #include <image_transport/subscriber_filter.h>
 #include <sensor_msgs/PointCloud2.h>
-#include <car_detection/CarDetection.h>
+// #include <car_detection/CarDetection.h>
 
 #include <tf/tf.h>
 #include <velodyne_pointcloud/point_types.h>
