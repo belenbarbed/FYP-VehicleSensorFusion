@@ -72,6 +72,7 @@ find_package(Boost REQUIRED COMPONENTS system filesystem thread)
 ## Generate messages in the 'msg' folder
 add_message_files(
   FILES
+  Bbox.msg
   Detected_Img.msg
 )
 

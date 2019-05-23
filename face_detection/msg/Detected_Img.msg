@@ -1,4 +1,4 @@
 std_msgs/Header header
-sensor_msgs/Image img
-int64[] bboxes
+sensor_msgs/CompressedImage img
+face_detection/Bbox[] bboxes
 string[] labels

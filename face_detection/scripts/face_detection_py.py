@@ -7,8 +7,8 @@ import numpy as np
 import rospy
 import time
 
-from sensor_msgs.msg import Image
-from face_detection.msg import Detected_Img
+from sensor_msgs.msg import CompressedImage, Image
+from face_detection.msg import Detected_Img, Bbox
 
 # Detect faces on 1-in-freq frames
 freq = 2
@@ -35,7 +35,7 @@ def callback(data, args):
         start =  time.clock()
 
         # Reduce frame size by half for speed purposes
-        frame = br.imgmsg_to_cv2(data, desired_encoding="bgr8")
+        frame = br.compressed_imgmsg_to_cv2(data, desired_encoding="bgr8")
         small_frame = cv2.resize(frame, (0, 0), fx=1/scale, fy=1/scale)
         rgb_small_frame = small_frame[:, :, ::-1]
 
@@ -56,23 +56,30 @@ def callback(data, args):
             bottom *= scale
             left *= scale
 
+            bbox = Bbox()
+            bbox.top = top
+            bbox.right = right
+            bbox.bottom = bottom
+            bbox.left = left
+            bboxes.append(bbox)
+
             # Draw a box around the face
-            cv2.rectangle(frame, (left, top), (right, bottom), (0, 0, 255), 2)
+            # cv2.rectangle(frame, (left, top), (right, bottom), (0, 0, 255), 2)
 
             # Draw a label with a name below the face
-            cv2.rectangle(frame, (left, bottom - 35), (right, bottom), (0, 0, 255), cv2.FILLED)
-            font = cv2.FONT_HERSHEY_DUPLEX
-            cv2.putText(frame, name, (left + 6, bottom - 6), font, 1.0, (255, 255, 255), 1)
+            # cv2.rectangle(frame, (left, bottom - 35), (right, bottom), (0, 0, 255), cv2.FILLED)
+            # font = cv2.FONT_HERSHEY_DUPLEX
+            # cv2.putText(frame, name, (left + 6, bottom - 6), font, 1.0, (255, 255, 255), 1)
 
         # Display the resulting image
-        cv2.imshow('Video' + str(pixel_no+1), frame)
-        cv2.waitKey(1)
+        # cv2.imshow('Video' + str(pixel_no+1), frame)
+        # cv2.waitKey(1)
 
         # Publish results for visualisation node
         msg = Detected_Img()
-        msg.header  = data.header
-        msg.img = frame
-        # msg.bboxes = ?
+        msg.header.stamp = data.header.stamp
+        msg.img = br.cv2_to_compressed_imgmsg(frame)
+        msg.bboxes = bboxes
         msg.labels = labels
         pub.publish(msg)
 
@@ -93,10 +100,10 @@ def main():
     pub3  = rospy.Publisher("/pixel_3/camera0/image/detected", Detected_Img, queue_size=1)
     pub4  = rospy.Publisher("/pixel_4/camera0/image/detected", Detected_Img, queue_size=1)
 
-    rospy.Subscriber("/pixel_1/camera0/image/not_compressed", Image, callback, ("0", pub1))
-    rospy.Subscriber("/pixel_2/camera0/image/not_compressed", Image, callback, ("1", pub2))
-    rospy.Subscriber("/pixel_3/camera0/image/not_compressed", Image, callback, ("2", pub3))
-    rospy.Subscriber("/pixel_4/camera0/image/not_compressed", Image, callback, ("3", pub4))
+    rospy.Subscriber("/pixel_1/camera0/image/compressed", CompressedImage, callback, ("0", pub1))
+    rospy.Subscriber("/pixel_2/camera0/image/compressed", CompressedImage, callback, ("1", pub2))
+    rospy.Subscriber("/pixel_3/camera0/image/compressed", CompressedImage, callback, ("2", pub3))
+    rospy.Subscriber("/pixel_4/camera0/image/compressed", CompressedImage, callback, ("3", pub4))
 
     rospy.spin()
 
