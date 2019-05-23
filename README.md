@@ -58,7 +58,7 @@ It is recommended to remove the ```build/``` and ```devel/``` folders and build 
 
 ### Velodyne
 
-Follow the [ROS integration instructions](http://wiki.ros.org/velodyne/Tutorials/Getting%20Started%20with%20the%20Velodyne%20VLP16)
+Follow the [ROS integration instructions](http://wiki.ros.org/velodyne/Tutorials/Getting%20Started%20with%20the%20Velodyne%20VLP16). For IP adress configuration, check out [these slides](https://velodynelidar.com/docs/manuals/63-9266%20REV%20A%20WEBSERVER%20USER%20GUIDE,HDL-32E%20&%20VLP-16.pdf).
 
 ## Calibration
 
