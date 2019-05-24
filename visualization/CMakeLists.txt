@@ -10,6 +10,7 @@ project(visualization)
 find_package(catkin REQUIRED COMPONENTS
   cv_bridge
   dynamic_reconfigure
+  face_detection
   image_geometry
   image_transport
   message_filters
@@ -83,10 +84,13 @@ find_package(catkin REQUIRED COMPONENTS
 # )
 
 ## Generate added messages and services with any dependencies listed here
-# generate_messages(
-#   DEPENDENCIES
-#   pcl_msgs#   sensor_msgs#   std_msgs
-# )
+generate_messages(
+  DEPENDENCIES
+  pcl_msgs
+  sensor_msgs
+  std_msgs
+  face_detection
+)
 
 ################################################
 ## Declare ROS dynamic reconfigure parameters ##
@@ -131,7 +135,7 @@ catkin_package(
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
 include_directories(
-# include
+  include
   ${catkin_INCLUDE_DIRS}
 )
 
@@ -213,14 +217,22 @@ include_directories(
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
 
-## For C++
+#############
+##   C++   ##
+#############
+
 # join_pointclouds
 add_executable(join_pointclouds src/join_pointclouds.cpp)
 add_dependencies(join_pointclouds ${catkin_EXPORTED_TARGETS} ${${PROJECT_NAME}_EXPORTED_TARGETS})
 target_link_libraries(join_pointclouds ${catkin_LIBRARIES} ${OpenCV_LIBRARIES} ${PCL_LIBRARIES})
 
+# video_visualization
+add_executable(video_visualization src/video_visualization.cpp src/Image.cpp src/Velodyne.cpp)
+add_dependencies(video_visualization ${catkin_EXPORTED_TARGETS} ${${PROJECT_NAME}_EXPORTED_TARGETS})
+target_link_libraries(video_visualization ${catkin_LIBRARIES} ${OpenCV_LIBRARIES} ${PCL_LIBRARIES})
+
 # Mark executables and/or libraries for installation
-install(TARGETS join_pointclouds
+install(TARGETS join_pointclouds video_visualization
   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
