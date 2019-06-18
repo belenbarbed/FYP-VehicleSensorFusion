@@ -11,7 +11,7 @@ from sensor_msgs.msg import CompressedImage, Image
 from face_detection.msg import Detected_Img, Bbox
 
 # Scale frame down for speed
-scale = 1
+scale = 2
 
 def callback_1(data):
     global br
@@ -200,9 +200,9 @@ def main():
     pub_4  = rospy.Publisher("/pixel_4/camera0/image/detected", Detected_Img, queue_size=1)
 
     rospy.Subscriber("/pixel_1/camera0/image/compressed", CompressedImage, callback_1, queue_size=1)
-    # rospy.Subscriber("/pixel_2/camera0/image/compressed", CompressedImage, callback_2, queue_size=1)
-    # rospy.Subscriber("/pixel_3/camera0/image/compressed", CompressedImage, callback_3, queue_size=1)
-    # rospy.Subscriber("/pixel_4/camera0/image/compressed", CompressedImage, callback_4, queue_size=1)
+    rospy.Subscriber("/pixel_2/camera0/image/compressed", CompressedImage, callback_2, queue_size=1)
+    rospy.Subscriber("/pixel_3/camera0/image/compressed", CompressedImage, callback_3, queue_size=1)
+    rospy.Subscriber("/pixel_4/camera0/image/compressed", CompressedImage, callback_4, queue_size=1)
 
     rospy.spin()
 

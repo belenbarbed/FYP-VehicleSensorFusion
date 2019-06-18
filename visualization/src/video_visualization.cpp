@@ -158,22 +158,22 @@ int main(int argc, char **argv) {
   projection_matrix = cv::Mat(3, 4, CV_32FC1, p_matrix);
 
   cv::namedWindow("Video_1");
-  // cv::namedWindow("Video_2");
-  // cv::namedWindow("Video_3");
-  // cv::namedWindow("Video_4");
+  cv::namedWindow("Video_2");
+  cv::namedWindow("Video_3");
+  cv::namedWindow("Video_4");
 
   ros::Subscriber sub_1  = nh.subscribe("/pixel_1/camera0/image/detected", 1, image_callback_1);
-  // ros::Subscriber sub_2  = nh.subscribe("/pixel_2/camera0/image/detected", 1, image_callback_2);
-  // ros::Subscriber sub_3  = nh.subscribe("/pixel_3/camera0/image/detected", 1, image_callback_3);
-  // ros::Subscriber sub_4  = nh.subscribe("/pixel_4/camera0/image/detected", 1, image_callback_4);
+  ros::Subscriber sub_2  = nh.subscribe("/pixel_2/camera0/image/detected", 1, image_callback_2);
+  ros::Subscriber sub_3  = nh.subscribe("/pixel_3/camera0/image/detected", 1, image_callback_3);
+  ros::Subscriber sub_4  = nh.subscribe("/pixel_4/camera0/image/detected", 1, image_callback_4);
   ros::Subscriber sub_pc = nh.subscribe("/velodyne_points", 1, pc_callback);
 
   ros::spin();
 
   cv::destroyWindow("Video_1");
-  // cv::destroyWindow("Video_2");
-  // cv::destroyWindow("Video_3");
-  // cv::destroyWindow("Video_4");
+  cv::destroyWindow("Video_2");
+  cv::destroyWindow("Video_3");
+  cv::destroyWindow("Video_4");
 
   ROS_INFO_STREAM("Finished video_visualization");
 }
