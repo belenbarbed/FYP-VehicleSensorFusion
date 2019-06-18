@@ -31,12 +31,9 @@ using namespace cv;
 using namespace pcl;
 using namespace but_calibration_camera_velodyne;
 
-Velodyne::Velodyne pointcloud_1;
-Velodyne::Velodyne pointcloud_2;
-Velodyne::Velodyne pointcloud_3;
-Velodyne::Velodyne pointcloud_4;
-
 cv::Mat projection_matrix;
+
+PointCloud<Velodyne::Point> pc;
 
 std::vector<float> DoF_1 = {0.19082, -0.15932, -0.226174, -0.00032127, 0.000937961, 0.00166544};
 std::vector<float> DoF_2 = {0.178896, -0.153617, -0.210116, -0.000114214, 0.00115482, -0.00148477};
@@ -77,49 +74,29 @@ void find_distance(
   }
 }
 
-void callback(
-  const face_detection::Detected_Img::ConstPtr& msg_1, 
-  const face_detection::Detected_Img::ConstPtr& msg_2,
-  const face_detection::Detected_Img::ConstPtr& msg_3,
-  const face_detection::Detected_Img::ConstPtr& msg_4,
-  const sensor_msgs::PointCloud2ConstPtr& msg_pc)
-{
-  ROS_INFO_STREAM("In callback");
+void image_callback(const face_detection::Detected_Img::ConstPtr& msg) {
 
-  face_detection::Detected_Img det_1 = *msg_1;
-  cv::Mat frame_rgb_1;
-  frame_rgb_1 = cv_bridge::toCvCopy(det_1.img, sensor_msgs::image_encodings::BGR8)->image;
+  ROS_INFO_STREAM("In image callback");
 
-  face_detection::Detected_Img det_2 = *msg_2;
-  cv::Mat frame_rgb_2;
-  frame_rgb_2 = cv_bridge::toCvCopy(det_2.img, sensor_msgs::image_encodings::BGR8)->image;
+  face_detection::Detected_Img det = *msg;
+  cv::Mat frame_rgb;
+  frame_rgb = cv_bridge::toCvCopy(det.img, sensor_msgs::image_encodings::BGR8)->image;
+  
+  // Velodyne::Velodyne pointcloud = Velodyne::Velodyne(pc).transform(0, 0, 0, M_PI / 2, 0, 0);
+  // Velodyne::Velodyne pointcloud = Velodyne::Velodyne(pc).transform(0, 0, 0, M_PI / 2, -M_PI / 2, 0);
+  Velodyne::Velodyne pointcloud = Velodyne::Velodyne(pc).transform(0, 0, 0, M_PI / 2, M_PI, 0);
+  // Velodyne::Velodyne pointcloud = Velodyne::Velodyne(pc).transform(0, 0, 0, M_PI / 2, M_PI / 2, 0);
 
-  face_detection::Detected_Img det_3 = *msg_3;
-  cv::Mat frame_rgb_3;
-  frame_rgb_3 = cv_bridge::toCvCopy(det_3.img, sensor_msgs::image_encodings::BGR8)->image;
+  find_distance(frame_rgb, det.bboxes, pointcloud, DoF_3);
 
-  face_detection::Detected_Img det_4 = *msg_4;
-  cv::Mat frame_rgb_4;
-  frame_rgb_4 = cv_bridge::toCvCopy(det_4.img, sensor_msgs::image_encodings::BGR8)->image;
-
-  PointCloud<Velodyne::Point> pc;
-  fromROSMsg(*msg_pc, pc);
-  pointcloud_1 = Velodyne::Velodyne(pc).transform(0, 0, 0, M_PI / 2, 0, 0);
-  pointcloud_2 = Velodyne::Velodyne(pc).transform(0, 0, 0, M_PI / 2, -M_PI / 2, 0);
-  pointcloud_3 = Velodyne::Velodyne(pc).transform(0, 0, 0, M_PI / 2, M_PI, 0);
-  pointcloud_4 = Velodyne::Velodyne(pc).transform(0, 0, 0, M_PI / 2, M_PI / 2, 0);
-
-  find_distance(frame_rgb_1, det_1.bboxes, pointcloud_1, DoF_1);
-  find_distance(frame_rgb_2, det_2.bboxes, pointcloud_2, DoF_2);
-  find_distance(frame_rgb_3, det_3.bboxes, pointcloud_3, DoF_3);
-  find_distance(frame_rgb_4, det_4.bboxes, pointcloud_4, DoF_4);
-
-  cv::imshow("Video_1", frame_rgb_1);
-  cv::imshow("Video_2", frame_rgb_2);
-  cv::imshow("Video_3", frame_rgb_3);
-  cv::imshow("Video_4", frame_rgb_4);
+  cv::imshow("Video_3", frame_rgb);
 
   cv::waitKey(1);
+}
+
+void pc_callback(const sensor_msgs::PointCloud2ConstPtr& msg_pc) {
+  ROS_INFO_STREAM("In pc callback");
+  fromROSMsg(*msg_pc, pc);
 }
 
 int main(int argc, char **argv) {
@@ -132,33 +109,23 @@ int main(int argc, char **argv) {
   float p_matrix[12] = {515.4, 0.0, 323.0, 0.0, 0.0, 518.7, 233.9, 0.0, 0.0, 0.0, 1.0, 0.0};
   projection_matrix = cv::Mat(3, 4, CV_32FC1, p_matrix);
 
-  cv::namedWindow("Video_1");
-  cv::namedWindow("Video_2");
+  // cv::namedWindow("Video_1");
+  // cv::namedWindow("Video_2");
   cv::namedWindow("Video_3");
-  cv::namedWindow("Video_4");
+  // cv::namedWindow("Video_4");
 
-  message_filters::Subscriber<face_detection::Detected_Img> sub_1(nh, "/pixel_1/camera0/image/detected", 1);
-  message_filters::Subscriber<face_detection::Detected_Img> sub_2(nh, "/pixel_2/camera0/image/detected", 1);
-  message_filters::Subscriber<face_detection::Detected_Img> sub_3(nh, "/pixel_3/camera0/image/detected", 1);
-  message_filters::Subscriber<face_detection::Detected_Img> sub_4(nh, "/pixel_4/camera0/image/detected", 1);
-  message_filters::Subscriber<sensor_msgs::PointCloud2> sub_pc(nh, "/velodyne_points", 10);
-  
-  typedef message_filters::sync_policies::ApproximateTime<
-    face_detection::Detected_Img,
-    face_detection::Detected_Img,
-    face_detection::Detected_Img,
-    face_detection::Detected_Img,
-    sensor_msgs::PointCloud2
-  > MySyncPolicy;
-  message_filters::Synchronizer<MySyncPolicy> sync(MySyncPolicy(10), sub_1, sub_2, sub_3, sub_4, sub_pc);
-  sync.registerCallback(boost::bind(&callback, _1, _2, _3, _4, _5));
+  ros::Subscriber sub_1  = nh.subscribe("/pixel_1/camera0/image/detected", 1, image_callback);
+  ros::Subscriber sub_2  = nh.subscribe("/pixel_2/camera0/image/detected", 1, image_callback);
+  ros::Subscriber sub_3  = nh.subscribe("/pixel_3/camera0/image/detected", 1, image_callback);
+  ros::Subscriber sub_4  = nh.subscribe("/pixel_4/camera0/image/detected", 1, image_callback);
+  ros::Subscriber sub_pc = nh.subscribe("/velodyne_points", 1, pc_callback);
 
   ros::spin();
 
-  cv::destroyWindow("Video_1");
-  cv::destroyWindow("Video_2");
+  // cv::destroyWindow("Video_1");
+  // cv::destroyWindow("Video_2");
   cv::destroyWindow("Video_3");
-  cv::destroyWindow("Video_4");
+  // cv::destroyWindow("Video_4");
 
   ROS_INFO_STREAM("Finished video_visualization");
 }

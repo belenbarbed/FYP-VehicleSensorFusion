@@ -109,7 +109,7 @@ Then remember to source in ALL open tabs:
 source devel/setup.sh
 ```
 
-If the phones and lidar don't sync properly, check their exact system time. If it's not the same, down to the second, one may have sync issues. For reference, use the [official US atomic time website](time.gov) to match their system times.
+If the phones and lidar don't sync properly, check their exact system time. If it's not the same, down to the second, one may have sync issues. For reference, check out [this atomic clock website](time.is) to match their system times.
 
 Other useful troubleshooting guides:
   - [Using cvBridge with python3](https://stackoverflow.com/questions/49221565/unable-to-use-cv-bridge-with-ros-kinetic-and-python3)
