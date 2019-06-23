@@ -2,28 +2,23 @@
 
 Supervisor: Soteris Demetriou
 
-## Authors
-
-[Belen Barbed](https://github.com/belenbarbed)
-
-[Kaifeng Yan](https://github.com/Kai-2333)
-
-[Flora Qin](https://github.com/FloraQin0325)
+Author: [Belen Barbed](https://github.com/belenbarbed)
 
 ## Goal
-To emulate part of the functionality of autonomous vehicles. You will build a car mount which can collect visual and distance information, and detect objects around the vehicle as well as their angle and distance from it. It should also be able to display in real time the captured information.
+
+The overarching goal of this project is to emulate the sensory functionality of a modern or autonomous vehicle using a legacy car and external hardware.
+
+To achieve this, a car mount was built, which can collect visual and distance information, detecting objects around the vehicle as well as their angle and distance from it. It also displays the captured information in real-time.
+
+The [full report](docs/Belen_Barbed_VVDSFRTP.pdf) goes into detail regarding the motivation, implementation, and evaluation of the system.
 
 ## Literature
-[Intro paper](http://seclab.illinois.edu/wp-content/uploads/2018/06/demetriou2018codrive.pdf)
+
+[Introductory paper](http://seclab.illinois.edu/wp-content/uploads/2018/06/demetriou2018codrive.pdf)
 
 [Callibration paper](https://pdfs.semanticscholar.org/ed15/5d1a146e0cba6be98fd7128461439f88732a.pdf)
 
   - [Implementation](https://github.com/robofit/but_velodyne/tree/master/but_calibration_camera_velodyne)
-
-## Links
-[GitHub Repo](https://github.com/belenbarbed/FYP-VehicleSensorFusion)
-
-[Google Drive Folder](https://drive.google.com/drive/folders/1wz1pCsgVdYGVe1YnCs0_oeLTOG-cAbBa?usp=sharing)
 
 ## First time setup
 
@@ -35,8 +30,8 @@ The phones are running the app [hNode](https://play.google.com/store/apps/detail
 
 Add the PC to the Husarnet network using:
 ```
-curl https://install.husarnet.com/install.sh | sudo bash
-sudo husarnet websetup
+$ curl https://install.husarnet.com/install.sh | sudo bash
+$ sudo husarnet websetup
 ```
 Follow the link returned to configure your device.
 
@@ -52,9 +47,13 @@ export ROS_HOSTNAME=master
 
 After pulling this repo into the src of a catkin workspace, remember to also pull the git submodules present: ```velodyne``` and ```vision_opencv``` with:
 ```
-git submodule update --init --recursive
+$ git submodule update --init --recursive
 ```
-It is recommended to remove the ```build/``` and ```devel/``` folders and build the workspace from scratch at the beginning, using ```catkin build```.
+It is recommended to remove the ```build/``` and ```devel/``` folders and build the workspace from scratch at the beginning, using:
+```
+$ catkin clean
+$ catkin build
+```
 
 ### Velodyne
 
@@ -62,28 +61,35 @@ Follow the [ROS integration instructions](http://wiki.ros.org/velodyne/Tutorials
 
 ## Calibration
 
-To calibrate the phone cameras, we used the Matlab function [cameraCalibrator](https://uk.mathworks.com/help/vision/ref/cameramatrix.html) to obtain the camera projection matrix P using a 8x6 checkerboard with 24mm square size and 40 samples. This gives us the FocalLength (f in the matrix) and the Principal points (ox and oy in the matrix).
+To calibrate the phone cameras, we used the Matlab function [cameraCalibrator](https://uk.mathworks.com/help/vision/ref/cameramatrix.html), which uses a 8x6 chequer-board with 24mm-sized squares, photographed 40 times from different angles and perspectives. This result returns the focal length and the principal points of the matrix (f and ox and oy in the projection matrix below).
 
-TODO: Add pic of matrix
+![Projection matrix of a pinhole camera](docs/P_matrix.jpg)
 
-The 4 phones can be calibrated against the lidar separately. To do so, run:
+The four phones can be calibrated against the lidar separately. To do so, run:
 ```
-roslaunch but_calibration_camera_velodyne calibration_fine.launch pixel:="[PIXEL_NO]"
+roslaunch but_calibration_camera_velodyne calibration_fine.launch pixel:="PIXEL_NO"
 ```
-with PIXEL_NO being the phone one wants to calibrate (1-4). The results from this calibration should be saved in [coloring.yaml](but_calibration_camera_velodyne/conf/coloring.yaml).
+with ```PIXEL_NO``` being the phone one wants to calibrate (1-4). Please ensure the relevant phone is facing the marker (a card with four equidistant circles cut from it) before beginning the calibration process.
+
+![Calibration being performed](docs/calibration.jpg)
+
+The results from this calibration are printed on the terminal output and should be saved in [but_calibration_camera_velodyne/conf/coloring.yaml](but_calibration_camera_velodyne/conf/coloring.yaml) in order to be used for the colouring node in the same package, executable with:
+```
+$ roslaunch but_calibration_camera_velodyne coloring.launch
+```
+
+For further camera-to-LiDAR calibration instructions, it is recommended to review the [paper that explains the theory](https://pdfs.semanticscholar.org/ed15/5d1a146e0cba6be98fd7128461439f88732a.pdf), as well as the [original package](https://github.com/robofit/but_velodyne/tree/master/but_calibration_camera_velodyne) that implemented it.
 
 ## Usage
 
 On the PC, several commands should be run.
 
-On the first tab, run ```roscore```.
-
-Then, run the package that listens to the phone topics and formats the image into a cv2-acceptable format with:
+On the first tab, run:
 ```
-rosrun phone_streams phone_streams_publisher.py
+$ roscore
 ```
 
-To make the Velodyne lidar start posting cloudpoint data, run:
+Then, to make the Velodyne lidar start posting cloudpoint data, execute:
 ```
 roslaunch velodyne_pointcloud VLP16_points.launch
 ```
@@ -92,19 +98,24 @@ After that, one can run
 ```
 rosrun face_detection face_detection_py.py
 ```
-to detect faces (instead of cars, for now) in all 4 camera streams and display them all.
-
-TODO: visualisation w/ distance info.
+to detect faces, or:
+```
+rosrun car_detection car_detection_py.py
+```
+to detect cars in all 4 camera streams, and display them all using:
+```
+$ rosrun visualization video_visualization
+```
 
 ## Troubleshooting
 
 If things are suddenly not working and one wants to start the build afresh, run:
 ```
-cd <ROS workspace dir>
-catkin clean
-catkin build
+$ cd <ROS workspace dir>
+$ catkin clean
+$ catkin build
 ```
-Then remember to source in ALL open tabs:
+Then remember to source in **ALL open** tabs:
 ```
 source devel/setup.sh
 ```
@@ -130,20 +141,23 @@ Other useful troubleshooting guides:
     - Metal stand-offs to support base (4) and lidar (1)
     - 4 holes for phone mounts
 
+![Picture of car mount](docs/car_mount_picture.jpg)
+
 ### ROS
-  - [but_calibration_camera_velodyne](https://github.com/robofit/but_velodyne/tree/master/but_calibration_camera_velodyne): node to callibrate the coordinate systems of the Lidar and 4 cameras.
-  - face_detection: uses [ageitgey's OpenCV implementation](https://github.com/ageitgey/face_recognition) to detect all faces per frame and overlays a red rectangle on top of the found faces. Displays all 4 video feeds too.
-  - phone_streams: listens to compressed image data from phones, uncompresses it, and publishes the raw image in new topic.
+  - [```but_calibration_camera_velodyne```](https://github.com/robofit/but_velodyne/tree/master/but_calibration_camera_velodyne): node to callibrate the coordinate systems of the Lidar and 4 cameras.
+  - ```car_detection```: uses OpenCV's cascade classifiers and [andrewssobral's trained classifier](https://github.com/andrewssobral/vehicle_detection_haarcascades/) to detect cars on all incoming camera streams. It then passes the locations of the found cars to the ```visualization``` pkg to visualise.
+  - ```face_detection```: uses [ageitgey's OpenCV implementation](https://github.com/ageitgey/face_recognition) to detect all faces in each frame, to then relay that information in another message for the ```visualization``` pkg to display.
+  - ```phone_streams```: listens to compressed image data from phones, uncompresses it, and publishes the raw image in new topic.
   - [hNode](https://play.google.com/store/apps/details?id=com.husarion.node&hl=en_GB): ROS node running in each of the phones to publish all phone sensor data (incl cameras) as ROS topics.
-  - [velodyne](https://github.com/ros-drivers/velodyne): driver for the VLP16, publishes the 3D cloudpoints over ethernet to ```/velodyne_points```.
-  - [vision_opencv](https://github.com/ros-perception/vision_opencv.git): contains cv_bridge to use with python3 nodes.
-  - visualization: TODO
+  - [```velodyne```](https://github.com/ros-drivers/velodyne): driver for the VLP16, publishes the 3D cloudpoints over ethernet to ```/velodyne_points```.
+  - [```vision_opencv```](https://github.com/ros-perception/vision_opencv.git): contains cv_bridge to use with python3 nodes.
+  - ```visualization```: performs sensor fusion with the detected objects from ```car_detection``` or ```face_detection``` and visualises the resulting feeds using OpenCV.
   
 
-### Recognition System (server)
+### Object Recognition System
   - Face detection: in face_detection package using [ageitgey's OpenCV implementation](https://github.com/ageitgey/face_recognition)
   - Car detection: TODO (maybe YOLO?)
 
 ### Visualisation
-  - Is currently in face_detection, using [cv2](https://opencv.org/).
-  - TODO: Check out NGINX w/ RTMP?
+
+Is currently in ```visualization``` pkg, using [cv2](https://opencv.org/).
