@@ -61,13 +61,17 @@ Follow the [ROS integration instructions](http://wiki.ros.org/velodyne/Tutorials
 
 ## Calibration
 
+### Camera Calibration
+
 To calibrate the phone cameras, we used the Matlab function [cameraCalibrator](https://uk.mathworks.com/help/vision/ref/cameramatrix.html), which uses a 8x6 chequer-board with 24mm-sized squares, photographed 40 times from different angles and perspectives. This result returns the focal length and the principal points of the matrix (f and ox and oy in the projection matrix below).
 
 ![Projection matrix of a pinhole camera](docs/P_matrix.jpg)
 
-The four phones can be calibrated against the lidar separately. To do so, run:
+### Camera-to-LiDAR Calibration
+
+The four phones can be calibrated against the LiDAR separately. To do so, run:
 ```
-roslaunch but_calibration_camera_velodyne calibration_fine.launch pixel:="PIXEL_NO"
+$ roslaunch but_calibration_camera_velodyne calibration_fine.launch pixel:="PIXEL_NO"
 ```
 with ```PIXEL_NO``` being the phone one wants to calibrate (1-4). Please ensure the relevant phone is facing the marker (a card with four equidistant circles cut from it) before beginning the calibration process.
 
@@ -89,18 +93,18 @@ On the first tab, run:
 $ roscore
 ```
 
-Then, to make the Velodyne lidar start posting cloudpoint data, execute:
+Then, to make the Velodyne LiDAR start posting cloudpoint data, execute:
 ```
-roslaunch velodyne_pointcloud VLP16_points.launch
+$ roslaunch velodyne_pointcloud VLP16_points.launch
 ```
 
 After that, one can run
 ```
-rosrun face_detection face_detection_py.py
+$ rosrun face_detection face_detection_py.py
 ```
 to detect faces, or:
 ```
-rosrun car_detection car_detection_py.py
+$ rosrun car_detection car_detection_py.py
 ```
 to detect cars in all 4 camera streams, and display them all using:
 ```
@@ -120,7 +124,7 @@ Then remember to source in **ALL open** tabs:
 source devel/setup.sh
 ```
 
-If the phones and lidar don't sync properly, check their exact system time. If it's not the same, down to the second, one may have sync issues. For reference, check out [this atomic clock website](time.is) to match their system times.
+If the phones and LiDAR don't sync properly, check their exact system time. If it's not the same, down to the second, one may have sync issues. For reference, check out [this atomic clock website](time.is) to match their system times.
 
 Other useful troubleshooting guides:
   - [Using cvBridge with python3](https://stackoverflow.com/questions/49221565/unable-to-use-cv-bridge-with-ros-kinetic-and-python3)
@@ -138,25 +142,24 @@ Other useful troubleshooting guides:
   - Mount to vehicle
     - Circular & symmetric base
     - Aluminium extrusions to hold to car
-    - Metal stand-offs to support base (4) and lidar (1)
+    - Metal stand-offs to support base (4) and LiDAR (1)
     - 4 holes for phone mounts
 
 ![Picture of car mount](docs/car_mount_picture.jpg)
 
 ### ROS
   - [```but_calibration_camera_velodyne```](https://github.com/robofit/but_velodyne/tree/master/but_calibration_camera_velodyne): node to callibrate the coordinate systems of the Lidar and 4 cameras.
-  - ```car_detection```: uses OpenCV's cascade classifiers and [andrewssobral's trained classifier](https://github.com/andrewssobral/vehicle_detection_haarcascades/) to detect cars on all incoming camera streams. It then passes the locations of the found cars to the ```visualization``` pkg to visualise.
+  - ```car_detection```: uses OpenCV's cascade classifiers with [andrewssobral's trained classifier](https://github.com/andrewssobral/vehicle_detection_haarcascades/) to detect cars on all incoming camera streams. It then passes the locations of the found cars to the ```visualization``` pkg to visualise.
   - ```face_detection```: uses [ageitgey's OpenCV implementation](https://github.com/ageitgey/face_recognition) to detect all faces in each frame, to then relay that information in another message for the ```visualization``` pkg to display.
   - ```phone_streams```: listens to compressed image data from phones, uncompresses it, and publishes the raw image in new topic.
   - [hNode](https://play.google.com/store/apps/details?id=com.husarion.node&hl=en_GB): ROS node running in each of the phones to publish all phone sensor data (incl cameras) as ROS topics.
   - [```velodyne```](https://github.com/ros-drivers/velodyne): driver for the VLP16, publishes the 3D cloudpoints over ethernet to ```/velodyne_points```.
   - [```vision_opencv```](https://github.com/ros-perception/vision_opencv.git): contains cv_bridge to use with python3 nodes.
   - ```visualization```: performs sensor fusion with the detected objects from ```car_detection``` or ```face_detection``` and visualises the resulting feeds using OpenCV.
-  
 
 ### Object Recognition System
-  - Face detection: in face_detection package using [ageitgey's OpenCV implementation](https://github.com/ageitgey/face_recognition)
-  - Car detection: TODO (maybe YOLO?)
+  - Car detection: in ```car_detection``` package using OpenCV's cascade classifiers with [andrewssobral's trained classifier](https://github.com/andrewssobral/vehicle_detection_haarcascades/).
+  - Face detection: in ```face_detection``` package using [ageitgey's OpenCV implementation](https://github.com/ageitgey/face_recognition).
 
 ### Visualisation
 
