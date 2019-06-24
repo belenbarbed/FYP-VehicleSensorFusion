@@ -10,7 +10,7 @@ from sensor_msgs.msg import CompressedImage, Image
 from car_detection.msg import Detected_Img, Bbox
 
 # Scale frame down for speed
-scale = 2
+scale = 1
 
 def callback_1(data):
     global br
@@ -145,10 +145,10 @@ def callback_4(data):
     # Reduce frame size by half for speed purposes
     frame = br.compressed_imgmsg_to_cv2(data, desired_encoding="bgr8")
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-    small_frame = cv2.resize(gray, (0, 0), fx=1/scale, fy=1/scale)
+    small_gray = cv2.resize(gray, (0, 0), fx=1/scale, fy=1/scale)
 
     # Detect faces in frame
-    car_locations = car_cascade.detectMultiScale(small_frame, 1.1, 1)
+    car_locations = car_cascade.detectMultiScale(small_gray, 1.1, 1)
 
     labels = []
     bboxes = []
@@ -185,7 +185,7 @@ def main():
     br = CvBridge()
 
     global car_cascade
-    car_cascade = cv2.CascadeClassifier(cascade_src)
+    car_cascade = cv2.CascadeClassifier('/home/soteris-group/bb2115/catkin_ws/src/car_detection/scripts/cars.xml')
 
     global pub_1
     pub_1  = rospy.Publisher("/pixel_1/camera0/image/detected", Detected_Img, queue_size=1)

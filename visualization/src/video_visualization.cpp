@@ -1,6 +1,8 @@
 #include <cstdlib>
 #include <cstdio>
 #include <boost/foreach.hpp>
+#include <iomanip>
+#include <sstream>
 
 #include <ros/ros.h>
 #include <image_transport/image_transport.h>
@@ -61,13 +63,21 @@ void find_distance(
       cv::Point(left, top),
       cv::Point(right, bottom),
       Scalar(255, 0, 0), 1, 8, 0);
-    std::string distance = "distance: " +
-      to_string(transformed.project(&frame, projection_matrix,
+
+    float distance = transformed.project(&frame, projection_matrix,
         Rect(0, 0, frame.cols, frame.rows),
-        Rect(left, top, right - left, top - bottom), &visible_points))
-      + "m";
+        Rect(left, top, right - left, top - bottom), &visible_points);
+
+    if (isinf(distance)) {
+      distance = 0.0;
+    }
+
+    std::stringstream ss;
+    ss << std::fixed << std::setprecision(2) << distance;
+    std::string distance_text = "distance: " + ss.str() + "m";
+
     cv::putText(frame,
-      distance,
+      distance_text,
       cv::Point(left + 6, bottom - 6),
       cv::FONT_HERSHEY_DUPLEX, 1.0,
       Scalar(255, 255, 255), 1, 8, false);
